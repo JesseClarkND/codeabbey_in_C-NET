@@ -1,0 +1,21 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string first = null;
+            string second = null;
+            Console.WriteLine("Welcome to the adding machine!");
+            Console.WriteLine("Enter the first number:");
+            first = Console.ReadLine();
+            Console.WriteLine("Enter the second number:");
+            second = Console.ReadLine();
+
+            Console.WriteLine("The sum of the two numbers is:");
+            Console.Write(Convert.ToInt32(first)+Convert.ToInt32(second));
+            Console.ReadKey();
+
+        }
+    }
+}
