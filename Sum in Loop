@@ -1,0 +1,26 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string first = null;
+            string second = null;
+            Console.WriteLine("Welcome to the loop adding machine!");
+            Console.WriteLine("Enter the number of elements:"); //This doesn't do anything :(
+            first = Console.ReadLine();
+            Console.WriteLine("Enter the series of numbers to add:");
+            second = Console.ReadLine();
+
+            string[] numbers = second.Split(' ');
+            int sum = 0;
+            foreach (string text in numbers)
+                sum += Convert.ToInt32(text);
+
+            Console.WriteLine("The sum of the two numbers is:");
+            Console.Write(sum);
+            Console.ReadKey();
+
+        }
+    }
+}
