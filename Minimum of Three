@@ -1,0 +1,41 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string first = null;
+            string second = null;
+            string answer = null;
+            int[] numberarry = new int[3];
+            Console.WriteLine("Welcome to the second loop adding machine!");
+            //Console.WriteLine("Enter the number of elements:");
+            //first = Console.ReadLine();
+            //int[,] numberarry = new int[Convert.ToInt32(first), 2];
+            Console.WriteLine("Enter the series of numbers to add:");
+            while ((second = Console.ReadLine()) != null)
+            {
+                if (second == "")
+                    break;
+                string[] numbers = second.Split(' ');
+
+                
+                int part = 0;
+                foreach (string text in numbers)
+                {
+                    
+                    numberarry[part]=Convert.ToInt32(text);
+                    
+                    part = (part + 1) % 3;
+                }
+                Array.Sort(numberarry);
+                answer = answer + numberarry[0].ToString() + ' ';
+            }
+
+            Console.WriteLine("The minimum of the two numbers is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
