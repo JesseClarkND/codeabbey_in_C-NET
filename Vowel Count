@@ -1,0 +1,41 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string answer = null;
+            string second = null;
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n","|");
+            string[] rows = second.Split('|');
+
+            bool skip = true;//This is to skip the first number
+            char[] search = new char[] {'a','e','i','o','u','y' };
+            int vowel_count=0;
+            //A very C++ way of finding the answer
+            foreach (string text in rows)
+            {
+                foreach (char character in text)
+                {
+                    for(int i =0;i<6;i++)
+                    {
+                        if(character==search[i])
+                            vowel_count++;
+                    }
+                }
+                answer += vowel_count+" ";
+                vowel_count = 0;
+            }
+            
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.TrimEnd(' '));
+           Console.ReadKey();
+
+        }
+    }
+}
