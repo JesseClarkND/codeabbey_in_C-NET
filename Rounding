@@ -1,0 +1,34 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string answer = null;
+            string second = null;
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n","|");
+            string[] rows = second.Split('|');
+
+            string[] temp = new string[2];
+            foreach (string text in rows)
+            {
+                temp = text.Split(' ');
+                var one = Convert.ToDouble(temp[0]);
+                var another = Convert.ToDouble(temp[1]);
+                double double_ans = one/another;
+                double_ans = (double)decimal.Round((decimal)double_ans, 0, MidpointRounding.AwayFromZero);
+                answer += double_ans.ToString() + " ";
+            }
+            
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer);
+           Console.ReadKey();
+
+        }
+    }
+}
