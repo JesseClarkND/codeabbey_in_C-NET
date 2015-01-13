@@ -1,0 +1,52 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+        double power(int start, int exp)
+        {
+            int sum = 1;
+
+            for (int i = 0; i < exp; i++)
+            {
+                sum = start * sum;
+            }
+
+            return sum;
+        }
+
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[] numberarry = new int[2];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+            foreach (string text in rows)
+            {
+                string[] numbers = text.Split(' ');
+                double temp = Convert.ToDouble(numbers[0]) / Math.Pow(Convert.ToDouble(numbers[1]), 2.0);
+
+                if (temp < 18.5)
+                    answer = answer + "under ";
+                else if (temp < 25.0)
+                    answer = answer + "normal ";
+                else if (temp < 30.0)
+                    answer = answer + "over ";
+                else
+                    answer = answer + "obese ";
+            }
+
+
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
