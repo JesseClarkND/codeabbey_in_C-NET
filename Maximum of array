@@ -1,0 +1,30 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string second = null;
+            int[] numberarry = new int[300];
+            string filePath = "inputfile.txt";
+
+
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+
+            string[] numbers = second.Split(' ');
+
+                
+            int count=0;
+            foreach (string text in numbers)    
+                numberarry[count++]=Convert.ToInt32(text);
+            
+
+            Console.WriteLine("The minimum of the two numbers is:");
+            Console.Write(numberarry.Max()+" "+numberarry.Min());
+            Console.ReadKey();
+
+        }
+    }
+}
