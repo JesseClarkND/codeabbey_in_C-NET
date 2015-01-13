@@ -1,0 +1,37 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string answer = null;
+            string second = null;
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            //second = second.Replace("\r\n","|");
+            string[] rows = second.Split(' ');
+
+            //string[] temp = new string[2];
+            bool skip = true;//This is to skip the first number
+            foreach (string text in rows)
+            {
+                if (!skip)
+                {
+                    var one = Convert.ToDouble(text);
+                    double double_ans = (one - 32) * (5d / 9d);
+                    double_ans = (double)decimal.Round((decimal)double_ans, 0, MidpointRounding.AwayFromZero);
+                    answer += double_ans.ToString() + " ";
+                }
+                skip = false;
+            }
+            
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer);
+           Console.ReadKey();
+
+        }
+    }
+}
