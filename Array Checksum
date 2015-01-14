@@ -1,0 +1,40 @@
+    class Program
+    {
+
+
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[] numberarry = new int[2];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+            foreach (string text in rows)
+            {
+                long temp = 0;
+
+                string[] numbers_in_row = text.Split(' ');
+                foreach (string single_number in numbers_in_row)
+                {
+                    temp = temp + Convert.ToInt32(single_number);
+                    temp = temp * 113;
+                    temp = temp % 10000007;
+                }
+
+                answer = answer + temp + ' ';
+                temp = 0;
+            }
+
+
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
