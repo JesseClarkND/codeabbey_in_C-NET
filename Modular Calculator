@@ -1,0 +1,46 @@
+using System.Numerics;
+
+namespace CodeAbbey1
+{
+    class Program
+    {
+
+
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[] numberarry = new int[2];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+            //System.Numerics.
+            BigInteger start_value = BigInteger.Parse(rows[0]);
+            //ulong debugger = start_value;
+            foreach (string command in rows.Skip(1))//I just learned about this! .Skip is cool
+            {
+             //   if (debugger > start_value)
+             //       Console.WriteLine("kaaaaaaaaaaaaaaaaaaaaaaaaaaan");
+                string[] combo = command.Split(' ');
+             //   debugger = start_value;
+                if (combo[0] == "+")
+                    start_value += Convert.ToUInt64(combo[1]);
+                else if (combo[0] == "*")
+                    start_value *= Convert.ToUInt64(combo[1]);
+                else
+                    start_value = start_value % Convert.ToUInt64(combo[1]);
+            }
+            answer = answer + start_value + ' ';
+            //temp = 0;
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
