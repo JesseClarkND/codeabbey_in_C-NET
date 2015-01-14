@@ -1,0 +1,32 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+
+
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[] numberarry = new int[2];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            //second = second.Replace("\r\n", "|");
+            string[] rows = second.Split(' ');
+
+            foreach (string text in rows)
+            {
+                int temp = 0;
+                int multiplier = 1;
+                foreach (char character in text)
+                {
+                    temp = temp + (Convert.ToInt32(character)-48) * multiplier;
+                    multiplier++;
+                }
+                multiplier = 1;
+
+                answer = answer + temp + ' ';
+            }
+}
