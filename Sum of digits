@@ -1,0 +1,43 @@
+    class Program
+    {
+
+
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[] numberarry = new int[2];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+            foreach (string text in rows)
+            {
+                int temp = 0;
+                int number_count = 0;
+                string[] numbers_in_row = text.Split(' ');
+                temp = Convert.ToInt32(numbers_in_row[0]) * Convert.ToInt32(numbers_in_row[1]) + Convert.ToInt32(numbers_in_row[2]);
+                int tally = 0;
+                while(temp>0)
+                {
+                    tally = tally+ (temp % 10);
+                    temp = temp / 10;//since temp is an int, the decmial value is just truncated
+                                    //that is the secret to this program
+                }
+
+                answer = answer + tally + ' ';
+                temp = 0;
+                number_count = 0;
+            }
+
+
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
