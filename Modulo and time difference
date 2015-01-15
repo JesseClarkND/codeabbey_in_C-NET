@@ -1,0 +1,56 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+
+
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[] numberarry;
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+            
+//start: May 3, 17:08:30
+//end  : May 8, 12:54:15
+//day1 hour1 min1 sec1
+
+            foreach (string row in rows.Skip(1))
+            {
+                int[] start_date = new int[4];
+                int[] end_date = new int[4];
+                int x = 0;
+                string[] numbers_in_row = row.Split(' ');
+                //Make them managable ints!
+                foreach (string numbers in numbers_in_row)
+                {
+                    if (x < 4)
+                        start_date[x] = Convert.ToInt32(numbers);
+                    else
+                        end_date[x - 4] = Convert.ToInt32(numbers);
+                    x++;
+                }
+                //Make them seconds!
+                long start_sec = 0;
+                long end_sec = 0;
+                start_sec = (start_date[0] * 86400) + (start_date[1] * 3600) + (start_date[2] * 60) + (start_date[3]);
+                end_sec = (end_date[0] * 86400) + (end_date[1] * 3600) + (end_date[2] * 60) + (end_date[3]);
+                long difference = end_sec - start_sec;
+                long fulldays = difference / 86400;
+                long fullhours = (difference % 86400) / 3600;
+                long fullminutes = ((difference % 86400) % 3600) / 60;
+                long fullseconds = (((difference % 86400) % 3600) % 60);
+                answer=answer+'('+fulldays.ToString()+' '+fullhours.ToString()+' '+fullminutes.ToString()+' '+fullseconds+") ";
+            }
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
