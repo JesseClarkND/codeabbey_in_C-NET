@@ -1,0 +1,28 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+
+
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[] numberarry;
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            //second = second.Replace("\r\n", "|");
+            //string[] rows = second.Split('|');
+
+            char[] chararr = second.ToCharArray();
+            Array.Reverse(chararr);
+            answer = new string(chararr);
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
