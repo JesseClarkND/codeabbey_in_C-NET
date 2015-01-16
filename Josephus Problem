@@ -1,0 +1,55 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+
+
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            //second = second.Replace("\r\n", "|");
+            string[] rows = second.Split(' ');
+            int[] numberarry = Enumerable.Repeat(-1, Convert.ToInt32(rows[0])).ToArray(); ;//Create an array that is the 1st number big
+            int kill_number = Convert.ToInt32(rows[1])-1;//Get our kill number;
+
+            int index = 0;
+            int x = 0;
+            int kill_count = 0;
+            while(true)
+            {
+                if (kill_count == numberarry.Length - 1)
+                    break;
+
+                if (numberarry[index] == -1)
+                {
+                    if (x == kill_number)
+                    {
+                        numberarry[index] = 0;
+                        kill_count++;
+                        x = -1;
+                    }
+                    x++;
+                    index = (index + 1) % numberarry.Length;
+                }
+                else
+                {
+                    index = (index + 1) % numberarry.Length;
+                }
+            }
+            int pants = 0;
+            for (pants = 0; pants < numberarry.Length; pants++)
+                if (numberarry[pants] == -1)
+                    break;
+            Console.WriteLine("The answer is:");
+            Console.Write((pants+1));
+            Console.ReadKey();
+
+        }
+    }
+}
