@@ -1,0 +1,55 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+
+
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+            int[] numberarry;// = Enumerable.Repeat(-1, Convert.ToInt32(rows[0])).ToArray(); ;//Create an array that is the 1st number big
+            //int kill_number = Convert.ToInt32(rows[1])-1;//Get our kill number;
+
+            int index = 0;
+            int x = 0;
+            int kill_count = 0;
+            foreach (string row in rows.Skip(1))
+            {
+                numberarry = new int[2];
+                string[] numbers = row.Split(' ');
+                numberarry[0] = Convert.ToInt32(numbers[0]);
+                numberarry[1] = Convert.ToInt32(numbers[1]);
+
+                int GCD = 0;
+                int LCM = 0;
+                int temp1 = numberarry[0];
+                int temp2 = numberarry[1];
+                //Find GCD
+                while (numberarry[0] != numberarry[1])
+                {
+                    if (numberarry[0] > numberarry[1])
+                        numberarry[0] = numberarry[0] - numberarry[1];
+                    else
+                        numberarry[1] = numberarry[1] - numberarry[0];
+                }
+                GCD = numberarry[0];
+                //Find LCM //GCD(A, B) * LCM(A, B) = A * B
+                LCM = (temp1 * temp2) / GCD;
+
+                answer = answer + '(' + GCD + ' ' + LCM + ") ";
+            }
+            Console.WriteLine("The answer is:");
+            Console.Write(answer);
+            Console.ReadKey();
+
+        }
+    }
+}
