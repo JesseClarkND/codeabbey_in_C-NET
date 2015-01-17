@@ -1,0 +1,72 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+
+
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[,] numberarry;
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+            numberarry = new int[Convert.ToInt32(rows[0]),2];
+
+            int temp = 0;
+            int temp2 = 0;
+            foreach (string carrot in rows.Skip(1))
+            {
+                int step_counter = 0;
+                string[] numbers_in_row = carrot.Split(' ');
+                foreach (string number in numbers_in_row)
+                {
+                    numberarry[step_counter, 1] = step_counter;
+                    numberarry[step_counter++, 0] = Convert.ToInt32(number);
+                }
+
+                int passes_made = 0;
+                int swaps = 0;
+                bool done = false;
+                //Sort now
+                while (true)
+                {
+                    int check = swaps;
+                    for (int x = 0; x < ((numberarry.Length / 2) - 1); x++)
+                    {
+                        if (x + 1 < (numberarry.Length/2))
+                        {
+                            if (numberarry[x,0] > numberarry[x + 1,0])//a[i] <= a[i+1]
+                            {
+                                temp = numberarry[x + 1,0];
+                                temp2 = numberarry[x + 1, 1];
+                                numberarry[x + 1,0] = numberarry[x,0];
+                                numberarry[x + 1, 1] = numberarry[x, 1];
+                                numberarry[x,0] = temp;
+                                numberarry[x, 1] = temp2;
+                                swaps++;
+                            }
+                        }
+                    }
+                    passes_made++;
+                    if (swaps == check)
+                        break;
+                }
+
+               // answer = passes_made.ToString() + ' ' + swaps.ToString();
+            }
+
+            for (int y = 0; y < (numberarry.Length / 2); y++)
+                answer = answer + (numberarry[y, 1]+1).ToString() + ' ';
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
