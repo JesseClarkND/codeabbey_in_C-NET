@@ -1,0 +1,45 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+
+
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+            decimal[] numberarry = new decimal[Convert.ToInt32(rows[0])];
+            
+            foreach (string row in rows.Skip(1))
+            {
+                int x = 0;
+                string[] numbers = row.Split(' ');
+                foreach(string number in numbers)
+                   numberarry[x++]=(decimal)Convert.ToDecimal(number);
+
+                answer = answer + numberarry[0].ToString() + ' ';
+                for(int y=1;y<numberarry.Length-1;y++)//Should error check to ensure that atleast 3 datapoints are given
+                {
+                    answer = answer += decimal.Round((numberarry[y - 1] + numberarry[y] + numberarry[y + 1]) / 3, 8, MidpointRounding.AwayFromZero).ToString() + ' ';
+                    /*
+                    numberarry[y]=decimal.Round((numberarry[y-1]+numberarry[y]+numberarry[y+1])/3,8,MidpointRounding.AwayFromZero);
+                    answer=answer+numberarry[y].ToString()+' ';
+                     */
+                }
+                answer = answer + numberarry[numberarry.Length-1].ToString() + ' ';
+               // answer = answer + '(' + 6 + ' ' + 6 + ") ";
+            }
+            Console.WriteLine("The answer is:");
+            Console.Write(answer);
+            Console.ReadKey();
+
+        }
+    }
+}
