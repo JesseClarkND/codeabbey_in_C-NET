@@ -1,0 +1,51 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+
+        public static string Reverse(string flip)
+        {
+            char[] chararr = flip.ToCharArray();
+            Array.Reverse(chararr);
+            return new string(chararr);
+        }
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+            int length = Convert.ToInt32(rows[0])+1;
+            for (int y = 0; y < length; y++)
+            {
+                rows[y] = rows[y].Replace("!", "");
+                rows[y] = rows[y].Replace(".", "");
+                rows[y] = rows[y].Replace("?", "");
+                rows[y] = rows[y].Replace("-", "");
+                rows[y] = rows[y].Replace(",", "");
+                rows[y] = rows[y].Replace(" ", "");
+                rows[y] = rows[y].ToLower();
+            }
+            
+            foreach (string row in rows.Skip(1))
+            {
+                if (row == Reverse(row))
+                    answer = answer + "Y ";
+                else
+                    answer = answer + "N ";
+
+                
+               // answer = answer + '(' + 6 + ' ' + 6 + ") ";
+            }
+            Console.WriteLine("The answer is:");
+            Console.Write(answer);
+            Console.ReadKey();
+
+        }
+    }
+}
