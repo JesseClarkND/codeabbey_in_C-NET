@@ -1,0 +1,62 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+
+
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            decimal[] numberarry=new decimal[3];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+            decimal temp = 0;
+            decimal x=0;
+            foreach (string carrot in rows.Skip(1))
+            {
+                int counter = 0;
+                string[] numbers = carrot.Split(' ');
+                foreach (string number in numbers)
+                {
+                    numberarry[counter++] = Convert.ToDecimal(number);
+                }
+                decimal rate1 = numberarry[1];
+                decimal rate2 = numberarry[2];
+                while (true)
+                {
+                    decimal temp1 = Math.Round(rate1, 7, MidpointRounding.AwayFromZero);
+                    decimal temp2 = Math.Round(rate2, 7, MidpointRounding.AwayFromZero);
+                    decimal temp3 = Math.Round(numberarry[0], 7, MidpointRounding.AwayFromZero);
+                    if (temp1 + temp2 == temp3)
+                        break;
+                    else if (rate1 + rate2 < numberarry[0])
+                    {
+                        rate1 += numberarry[1];
+                        rate2 += numberarry[2];
+                    }
+                    else if (rate1 + rate2 > numberarry[0])
+                    {
+                        rate1 -= numberarry[1];
+                        rate2 -= numberarry[2];
+                        numberarry[1] = numberarry[1] / 10;
+                        numberarry[2] = numberarry[2] / 10;
+                    }
+                }
+                answer = answer + rate1.ToString() + ' ';
+            }
+
+            //temp = 0;
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
