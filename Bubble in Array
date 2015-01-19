@@ -18,7 +18,7 @@ namespace CodeAbbey1
             int spacecount = 0;
             for (int x = 0; x < rows[0].Length; x++)
                 if (rows[0][x] == ' ') spacecount++;
-            numberarry = new int[Convert.ToInt32(rows[0].Length) - spacecount];
+            numberarry = new int[Convert.ToInt32(spacecount+1)];
             
             int temp = 0;
             foreach (string carrot in rows)
