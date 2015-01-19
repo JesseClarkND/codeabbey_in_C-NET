@@ -1,0 +1,60 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+
+
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            decimal[] numberarry = new decimal[3];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+            char temp = ' ';
+
+            foreach (string carrot in rows.Skip(1))
+            {
+                string[] parts = carrot.Split(' ');
+                int counter = Convert.ToInt32(parts[0]);
+                char[] subject = parts[1].ToArray();
+
+                if (counter >= 0) //<- Pull from front
+                {
+                    for (int x = 0; x < counter; x++)
+                    {
+                        temp = subject[0];
+                        for (int y = 1; y < subject.Length; y++)
+                            subject[y - 1] = subject[y];
+                        subject[subject.Length - 1] = temp;
+                    }
+                }
+                else //-> Pull from back
+                {
+                    counter = counter * -1;
+                    for (int x = subject.Length - counter; x < subject.Length; x++)
+                    {
+                        temp = subject[subject.Length - 1];
+                        for (int y = subject.Length - 1; y > 0; y--)
+                            subject[y] = subject[y - 1];
+                        subject[0] = temp;
+                    }
+                }
+                string yo = new string(subject);
+                answer = answer + yo + ' ';
+            }
+
+            //temp = 0;
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
