@@ -1,0 +1,59 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+
+
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            decimal[] numberarry = new decimal[3];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+            char[] alphabet = new char[] {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R',
+                                          'S','T','U','V','W','X','Y','Z'};
+            char[] crypt = new char[26];
+            string[] info = rows[0].Split(' ');
+            int shift = Convert.ToInt32(info[1]);
+
+            char temp = ' ';
+            int roost =0;
+            for (int x = 0; x < shift; x++)
+            {
+                temp = crypt[0];
+                for (int y = 1; y < crypt.Length; y++)
+                    crypt[y - 1] = crypt[y];
+                crypt[crypt.Length - 1] = temp;
+            }
+
+            foreach (string row in rows.Skip(1))
+            {
+                char[] encrypted = row.ToCharArray();
+                for (int y = 0; y < encrypted.Length; y++)
+                {
+                    if (encrypted[y] != ' ' && encrypted[y] != '.')
+                    {//65-A 90-Z
+                        roost = (int)encrypted[y]-shift;
+                        if (roost < 65)
+                            roost = 90 - (64 - roost);
+                        encrypted[y] = (char)(roost);
+                    }
+                }
+                string lol = new string(encrypted);
+                answer = answer + lol + ' ';
+            }
+
+            //temp = 0;
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
