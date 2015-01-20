@@ -1,0 +1,39 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+
+
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            decimal[] numberarry = new decimal[3];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+            double temp = 0;
+            foreach (string row in rows.Skip(1))
+            {
+                string[] numbers = row.Split(' ');
+                foreach (string number in numbers)
+                {
+                    temp += Math.Pow((double)Convert.ToDecimal(number), 2);
+                }
+                answer = answer + temp.ToString() + ' ';
+                temp = 0;
+            }
+
+            //temp = 0;
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
