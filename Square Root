@@ -1,0 +1,48 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+
+
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            decimal[] numberarry = new decimal[3];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+            char temp = ' ';
+
+            foreach (string row in rows.Skip(1))
+            {
+                string[] parts = row.Split(' ');
+                decimal start = Convert.ToDecimal(parts[0]);
+                int steps = Convert.ToInt32(parts[1]);
+                decimal d = 0;
+                decimal r = 1;
+                for (int x = 0; x < steps; x++)
+                {
+                    d = start / r;
+                    if (Math.Abs(r - d) > (decimal)0.0000001)
+                        r = (r + d) / 2;
+                    else
+                        break;
+                }
+                r = Math.Round(r, 7, MidpointRounding.AwayFromZero);
+                answer = answer + r.ToString() + ' ';
+            }
+
+            //temp = 0;
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
