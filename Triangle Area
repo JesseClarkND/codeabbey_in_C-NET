@@ -1,0 +1,55 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+
+
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            decimal[] numberarry = new decimal[6];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+            int temp = 0;
+            decimal swine = 0;
+            decimal x = 73.595368554162M;
+            foreach (string row in rows.Skip(1))
+            {
+                //A * x + B * sqrt(x ^ 3) - C * exp(-x / 50) - D = 0
+                string[] numbers = row.Split(' ');
+                foreach (string number in numbers)
+                {
+                    numberarry[temp++] = Convert.ToDecimal(number);
+                }
+                temp = 0;
+
+                decimal a = 0;
+                decimal b = 0;
+                decimal c = 0;
+                decimal s = 0;
+                //numberarry 0,1 x1,y1
+                //numberarry 2,3 x2,y2
+                //numberarry 4,5 x3,y3
+                a = (decimal)Math.Sqrt(Math.Pow((double)(numberarry[2] - numberarry[0]), 2) + Math.Pow((double)(numberarry[3] - numberarry[1]), 2));
+                b = (decimal)Math.Sqrt(Math.Pow((double)(numberarry[4] - numberarry[2]), 2) + Math.Pow((double)(numberarry[5] - numberarry[3]), 2));
+                c = (decimal)Math.Sqrt(Math.Pow((double)(numberarry[0] - numberarry[4]), 2) + Math.Pow((double)(numberarry[1] - numberarry[5]), 2));
+                s = (a + b + c) / 2;
+                decimal area = (decimal)Math.Sqrt((double)(s*(s-a)*(s-b)*(s-c)));
+                answer = answer + area.ToString() + ' ';
+            }
+
+            //temp = 0;
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
