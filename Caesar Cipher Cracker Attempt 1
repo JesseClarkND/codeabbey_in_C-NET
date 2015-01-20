@@ -1,0 +1,170 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+
+
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            decimal[] numberarry = new decimal[3];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+            string[] info = rows[0].Split(' ');
+            string[] common = new string[] {" the ",
+" be  ",
+" to  ",
+" of  ",
+" and  ",
+" in  ",
+" that  ",
+" have  ",
+" it  ",
+" for  ",
+" not  ",
+" on  ",
+" with  ",
+" he  ",
+" as  ",
+" you  ",
+" do  ",
+" at  ",
+" this  ",
+" but  ",
+" his  ",
+" by  ",
+" from  ",
+" they  ",
+" we  ",
+" say  ",
+" her  ",
+" she  ",
+" or  ",
+" an  ",
+" will  ",
+" my  ",
+" one  ",
+" all  ",
+" would  ",
+" there  ",
+" their  ",
+" what  ",
+" so  ",
+" up  ",
+" out  ",
+" if  ",
+" about  ",
+" who  ",
+" get  ",
+" which  ",
+" go  ",
+" me  ",
+" when  ",
+" make  ",
+" can  ",
+" like  ",
+" time  ",
+" no  ",
+" just  ",
+" him  ",
+" know  ",
+" take  ",
+" people  ",
+" into  ",
+" year  ",
+" your  ",
+" good  ",
+" some  ",
+" could  ",
+" them  ",
+" see  ",
+" other  ",
+" than  ",
+" then  ",
+" now  ",
+" look  ",
+" only  ",
+" come  ",
+" its  ",
+" over  ",
+" think  ",
+" also  ",
+" back  ",
+" after  ",
+" use  ",
+" two  ",
+" how  ",
+" our  ",
+" work  ",
+" first  ",
+" well  ",
+" way  ",
+" even  ",
+" new  ",
+" want  ",
+" because  ",
+" any  ",
+" these  ",
+" give  ",
+" day  ",
+" most  ",
+" us ",
+" a  ",
+" I  "};
+            
+            int roost =0;
+
+            foreach (string row in rows.Skip(1))
+            {
+                char[] encrypted = row.ToCharArray();
+                int shift = 0;
+                bool foundit=false;
+                while(foundit==false)
+                {
+                    for (int y = 0; y < encrypted.Length; y++)
+                    {
+                        if (encrypted[y] != ' ')
+                        {//65-A 90-Z
+                            roost = (int)encrypted[y]-shift;
+                            if (roost < 65)
+                                roost = 90 - (64 - roost);
+                            encrypted[y] = (char)(roost);
+                        }
+                    }
+                    string lol = new string(encrypted);
+                    //is it true
+                    foreach(string word in common)
+                    {
+                        if(lol.Contains(word.ToUpper()))
+                        {
+                            foundit=true;
+                            answer = answer + lol + ' ' + shift+' ';
+                            break;
+                        }
+                        if (shift > 26)
+                        {
+                            foundit = true;
+                            answer = answer + "No Anser 0 ";
+                            break;
+                        }
+                    }
+                    
+                    shift++;
+                }
+                shift = 0;
+            }
+
+            //temp = 0;
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
