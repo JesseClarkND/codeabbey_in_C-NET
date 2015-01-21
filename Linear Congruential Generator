@@ -1,0 +1,51 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+
+
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[] numberarry = new int[5];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+            int temp = 0;
+            decimal x = 73.595368554162M;
+            foreach (string row in rows.Skip(1))
+            {
+                //A * x + B * sqrt(x ^ 3) - C * exp(-x / 50) - D = 0
+                string[] numbers = row.Split(' ');
+                foreach (string number in numbers)
+                {
+                    numberarry[temp++] = Convert.ToInt32(number);
+                }
+                temp = 0;
+                //Xnext = (A * Xcur + C) % M
+                //numberarry
+                //0 - A
+                //1 - C
+                //2 - M
+                //3 - X_0
+                //4 - N (iterations
+                for(int y=0;y<numberarry[4];y++)
+                    numberarry[3] = (numberarry[0] * numberarry[3] + numberarry[1]) % numberarry[2];
+
+                answer = answer + numberarry[3].ToString() + ' ';
+            }
+
+            //temp = 0;
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
