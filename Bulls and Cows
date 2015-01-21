@@ -1,0 +1,54 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+
+
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[] numberarry = new int[4];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+            string[] info = rows[0].Split(' ');
+            char[] int_info = info[0].ToArray();
+
+            int x = 0;
+            int y = 0;
+            foreach (string row in rows.Skip(1))
+            {
+                //x - first tells how many digits are guessed correctly and are in correct positions;
+                //y - second tells how many digits are guessed correctly but are in wrong positions
+                string[] numbers = row.Split(' ');
+                foreach (string number in numbers)
+                {
+                    x = 0;
+                    y = 0;
+                    char[] int_number = number.ToArray();
+
+                    for (int z = 0; z < 4; z++)
+                        if (int_info[z] == int_number[z])
+                            x++;
+                    for (int a = 0; a < 4; a++)
+                        for (int b = 0; b < 4; b++)
+                            if (int_info[a] == int_number[b])
+                                y++;
+                    y = y - x;//Dont count the digits in the correct position twice
+                    answer = answer + x.ToString() + '-' + y.ToString() + ' ';
+                }
+            }
+
+            //temp = 0;
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
