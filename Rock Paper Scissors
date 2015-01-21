@@ -1,0 +1,55 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+
+
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[] numberarry = new int[4];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+            int left = 0;
+            int right = 0;
+            foreach (string row in rows.Skip(1))
+            {
+                string[] numbers = row.Split(' ');
+                left = 0;
+                right = 0;
+                foreach (string number in numbers)
+                {
+                    char[] round = number.ToArray();
+                    if (round[0] == round[1])
+                        ;
+                    else if (round[0] == 'R' && round[1] == 'S')
+                        left++;
+                    else if (round[0] == 'S' && round[1] == 'P')
+                        left++;
+                    else if (round[0] == 'P' && round[1] == 'R')
+                        left++;
+                    else
+                        right++;
+
+                }
+                if (left > right)
+                    answer = answer + "1 ";
+                else
+                    answer = answer + "2 ";
+            }
+
+            //temp = 0;
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
