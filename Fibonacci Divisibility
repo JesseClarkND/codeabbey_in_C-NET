@@ -1,0 +1,49 @@
+using System.Numerics;
+
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[] numberarry;
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+            BigInteger[] fibonacci = new BigInteger[10000];
+            fibonacci[0] = 0;
+            fibonacci[1] = 1;
+            for (int x = 2; x < fibonacci.Length; x++)
+                fibonacci[x] = fibonacci[x - 1] + fibonacci[x - 2];
+
+            foreach (string row in rows.Skip(1))
+            {
+                string[] numbers = row.Split(' ');
+                foreach (string number in numbers)
+                {
+                    int x=1;
+                    int int_num = Convert.ToInt32(number);
+                    while (true)
+                    {
+                        if (fibonacci[x] % int_num == 0)
+                        {
+                            answer = answer + x.ToString() + ' ';
+                            break;
+                        }
+                        x++;
+                    }
+                }
+            }
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
