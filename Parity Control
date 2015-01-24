@@ -1,0 +1,65 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[] numberarry;
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+
+            int temp=0;
+            int temp2 = 0;
+            int counter=0;
+            foreach (string row in rows)
+            {
+                string[] numbers = row.Split(' ');
+                foreach (string number in numbers)
+                {
+                    int bit_counter = 0;
+                    temp = Convert.ToByte(number);
+                    if ((temp & 0x80) == 0x80)//If odd flag is turned on
+                    {
+                        temp = temp ^ 0x80;
+                        temp2 = temp;
+                        while (counter < 8)
+                        {
+                            if ((temp & 0x1) == 0x1)
+                                bit_counter++;
+                            counter++;
+                            temp = temp >> 1;
+                        }
+                        if (bit_counter % 2 == 1)
+                            answer = answer + Convert.ToChar(temp2);
+                    }
+                    else
+                    {
+                        temp2 = temp;
+                        while (counter < 8)
+                        {
+                            if ((temp & 0x1) == 0x1)
+                                bit_counter++;
+                            counter++;
+                            temp = temp >> 1;
+                        }
+                        if (bit_counter % 2 == 0)
+                            answer = answer + Convert.ToChar(temp2);
+                    }
+
+                    counter=0;
+                }
+            }
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
