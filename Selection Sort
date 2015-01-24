@@ -1,0 +1,58 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[] numberarry;// = new decimal[4];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+            numberarry = new int[Convert.ToInt32(rows[0])];
+            int temp = 0;
+            //enum rank{2, 3, 4, 5};
+
+            foreach (string row in rows.Skip(1))
+            {
+                string[] numbers = row.Split(' ');
+                //Set up array
+                foreach (string number in numbers)
+                {
+                    numberarry[temp++] = Convert.ToInt32(number);
+                }
+
+                temp = 0;
+                int pocket = 0;
+                int max_index = 0;
+                int size = numberarry.Length - 1;
+                while ((size - temp) != 0)
+                {
+                    max_index = 0;
+                    for (int j = 0; j < size - temp+1; j++)
+                    {
+                        if (numberarry[j] > numberarry[max_index])
+                            max_index = j;
+                    }
+                    pocket = numberarry[size - temp];
+                    numberarry[size - temp] = numberarry[max_index];
+                    numberarry[max_index] = pocket;
+                    temp++;
+                    answer = answer + max_index.ToString() + ' ';
+                }
+
+            }
+
+            //temp = 0;
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
