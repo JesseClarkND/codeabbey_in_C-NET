@@ -1,0 +1,70 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+
+
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            decimal[] numberarry = new decimal[4];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+            int temp = 0;
+            decimal monk = 0M;
+            
+            foreach (string row in rows.Skip(1))
+            {
+                //A * x + B * sqrt(x ^ 3) - C * exp(-x / 50) - D = 0
+                string[] numbers = row.Split(' ');
+                foreach (string number in numbers)
+                {
+                    numberarry[temp++] = Convert.ToDecimal(number);
+                }
+                temp = 0;
+                decimal A, B, C, D;
+                A = numberarry[0];
+                B = numberarry[1];
+                C = numberarry[2];
+                D = numberarry[3];
+
+                decimal x_bottom = 0M;
+                decimal x_top = 100M;
+                decimal x_mid=0M;
+                //Solution is guaranteed to exist somewhere in range 0 <= x <= 100.
+                while (true)
+                {
+                    x_mid=(x_top+x_bottom)/2;
+                    monk = A * x_mid;
+                    monk = monk + (B * (decimal)Math.Sqrt((double)Math.Pow((double)x_mid, 3)));
+                    monk = monk - (C * (decimal)Math.Exp((double)(x_mid * -1) / 50));
+                    monk = monk - D;
+                    monk = decimal.Round(monk, 7, MidpointRounding.AwayFromZero);
+
+                    if (monk == 0.000000M)
+                        break;
+                    else if (monk < 0)//
+                        x_bottom = x_mid;
+                    else if (monk > 0)//
+                        x_top = x_mid;
+
+                }
+                answer = answer + x_mid.ToString() + ' ';
+
+            }
+
+            //temp = 0;
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
