@@ -1,0 +1,64 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[] numberarry = new int[5];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+            int info;
+            string[] stringfo = rows[0].Split(' ');
+            info = Convert.ToInt32(stringfo[0]);
+                //Xnext = (A * Xcur + C) % M
+                //numberarry
+                //0 - A
+                //1 - C
+                //2 - M
+                //3 - X_0
+                //4 - N (iterations
+            numberarry[0] = 445;
+            numberarry[1] = 700001;
+            numberarry[2] = 2097152;
+            numberarry[3] = Convert.ToInt32(stringfo[1]);
+
+            int temp = 0;
+            string consonants = "bcdfghjklmnprstvwxz";
+            string vowels = "aeiou";
+            foreach (string row in rows.Skip(1))
+            {
+                string[] numbers = row.Split(' ');
+                foreach (string number in numbers)
+                {
+                    int cucumber = Convert.ToInt32(number);
+                    bool ping = false;
+                    while (cucumber != 0)
+                    {
+
+                        numberarry[3] = (numberarry[0] * numberarry[3] + numberarry[1]) % numberarry[2];
+                        if (!ping)
+                            answer = answer + consonants[numberarry[3] % 19];
+                        else
+                            answer = answer + vowels[numberarry[3] % 5];
+
+                        ping = !ping;
+                        cucumber--;
+                    }
+                    answer = answer + ' ';
+                }
+                temp = 0;
+            }
+            //temp = 0;
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+        }
+    }
+}
