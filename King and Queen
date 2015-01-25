@@ -1,0 +1,67 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[] numberarry;
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+
+            int temp=0;
+            int temp2 = 0;
+            int counter=0;
+            foreach (string row in rows.Skip(1))
+            {
+                           //key, value
+                KeyValuePair<char,int> King;
+                KeyValuePair<char, int> Queen;
+
+                King = new KeyValuePair<char, int>(Convert.ToChar(row[0]), Convert.ToInt32(row[1]) - 48);
+                Queen = new KeyValuePair<char, int>(Convert.ToChar(row[3]), Convert.ToInt32(row[4]) - 48);
+
+                //Check row
+                char yanah='N';
+                if (King.Key == Queen.Key)
+                    yanah='Y';
+                else if (King.Value == Queen.Value)
+                    yanah = 'Y';
+                else //Check Diagonals
+                {
+                    //Check up right
+                    int y = King.Key;
+                    for (int x = King.Value; x < 9 && y < 105; x++)
+                        if((Queen.Key==(char)y++) && (Queen.Value==x))
+                            yanah = 'Y';
+                    //Check down right
+                    y = King.Key;
+                    for (int x = King.Value; x > 0 && y < 105; x--)
+                        if ((Queen.Key == (char)y++) && (Queen.Value == x))
+                            yanah = 'Y';
+                    //Check down left
+                    y = King.Key;
+                    for (int x = King.Value; x > 0 && y > 96; x--)
+                        if ((Queen.Key == (char)y--) && (Queen.Value == x))
+                            yanah = 'Y';
+                    //Check up left
+                    y = King.Key;
+                    for (int x = King.Value; x < 9 && y > 96; x++)
+                        if ((Queen.Key == (char)y--) && (Queen.Value == x))
+                            yanah = 'Y';
+                }
+                answer = answer + yanah + ' ';
+            }
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
