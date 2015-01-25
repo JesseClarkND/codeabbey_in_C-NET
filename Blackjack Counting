@@ -1,0 +1,72 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[] numberarry;
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+
+            int temp=0;
+            int running_score = 0;
+            int ace_count = 0;
+            foreach (string row in rows.Skip(1))
+            {
+                string[] cards = row.Split(' ');
+                foreach (string card in cards)
+                {
+                    switch (card)
+                    {
+                        case "T":
+                        case "J":
+                        case "Q":
+                        case "K":
+                            running_score = running_score + 10;
+                            break;
+                        case "A":
+                            running_score = running_score + 11;
+                            ace_count++;
+                            break;
+                        default:
+                            running_score = running_score + Convert.ToInt32(card);
+                            break;
+                    }
+
+                }
+                if (running_score > 21 && ace_count == 0)
+                    answer = answer + "Bust ";
+                else if (running_score > 21 && ace_count > 0)
+                {
+                    while (ace_count > 0)
+                    {
+                        if (running_score <= 21)
+                            break;
+                        running_score -= 10;
+                        ace_count--;
+                    }
+                    if (running_score > 21)
+                        answer = answer + "Bust ";
+                    else
+                        answer = answer + running_score.ToString() + ' ';
+                }
+                else
+                    answer = answer + running_score.ToString() + ' ';
+
+                running_score = 0;
+                ace_count = 0;
+            }
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
