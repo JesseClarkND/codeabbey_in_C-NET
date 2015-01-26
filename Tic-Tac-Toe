@@ -1,0 +1,85 @@
+namespace CodeAbbey1
+{
+    /*
+      1 | 2 | 3
+     ---+---+---
+      4 | 5 | 6
+     ---+---+---
+      7 | 8 | 9
+     */
+    class Program
+    {
+        static bool Check_For_Win(int[] arry)
+        {
+            //Check Horizontal
+            if (arry[0] != 0 && arry[0] == arry[1] && arry[0] == arry[2])
+                return true;
+            else if (arry[3] != 0 && arry[3] == arry[4] && arry[3] == arry[5])
+                return true;
+            else if (arry[6] != 0 && arry[6] == arry[7] && arry[6] == arry[8])
+                return true;
+
+            //Check Vertical
+            if (arry[0] != 0 && arry[0] == arry[3] && arry[0] == arry[6])
+                return true;
+            else if (arry[1] != 0 && arry[1] == arry[4] && arry[1] == arry[7])
+                return true;
+            else if (arry[2] != 0 && arry[2] == arry[5] && arry[2] == arry[8])
+                return true;
+
+            //Check Diagonal
+            if (arry[0] != 0 && arry[0] == arry[4] && arry[0] == arry[8])
+                return true;
+            else if (arry[2] != 0 && arry[2] == arry[4] && arry[2] == arry[6])
+                return true;
+
+            return false;
+        }
+
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[] numberarry = new int[9]{0,0,0,0,0,0,0,0,0};
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+            int temp = 0;
+
+            foreach(string row in rows.Skip(1))
+            {
+                string[] numbers = row.Split(' ');
+                bool x_o = false;
+                foreach (string number in numbers)
+                {
+                    temp++;
+                    if(x_o)
+                        numberarry[Convert.ToInt32(number)-1] = 1;
+                    else
+                        numberarry[Convert.ToInt32(number)-1] = 2;
+
+                    x_o = !x_o;
+                    if (Check_For_Win(numberarry))
+                    {
+                        answer = answer + temp.ToString() + ' ';
+                        break;
+                    }
+                }
+                if (Check_For_Win(numberarry) == false)
+                    answer = answer + "0 ";
+
+                temp=0;
+                for (int x = 0; x < 9; x++)
+                    numberarry[x] = 0;
+            }
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+        }
+    }
+}
