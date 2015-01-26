@@ -1,0 +1,88 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[] numberarry = new int[3];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            //second = second.Replace("\r\n", "|");
+            string[] rows = second.Split(' ');
+
+            numberarry[0] = Convert.ToInt32(rows[0]);//Width  x
+            numberarry[1] = Convert.ToInt32(rows[1]);//Height y
+            numberarry[2] = Convert.ToInt32(rows[2]);//Word Length
+
+            int temp = 0;
+            int loc_x = 0;
+            int loc_y = 0;
+            /*
+            ------------>
+            |(0,0)     (10,0)
+            |
+            |
+            V(0,10)    (10,10)
+            */
+            int x_mod = 1;
+            int y_mod = 1;
+            while(temp<101)
+            {
+                answer = answer + loc_x.ToString() + ' ' + loc_y.ToString() + ' ';
+                //Start out going down and to the left
+
+                if (x_mod == 1)//Going left!
+                {
+                    if ((loc_x + numberarry[2]) >= numberarry[0])
+                    {
+                        x_mod = x_mod * -1;
+                        loc_x--;
+                    }
+                    else
+                        loc_x++;
+                }
+                else//Going Right!
+                {
+                    if (loc_x == 0)
+                    {
+                        x_mod = x_mod * -1;
+                        loc_x++;
+                    }
+                    else
+                        loc_x--;
+                }
+
+                if (y_mod == 1)//Going down!
+                {
+                    if (loc_y + 1 >= numberarry[1])
+                    {
+                        y_mod = y_mod * -1;
+                        loc_y--;
+                    }
+                    else
+                        loc_y++;
+                }
+                else
+                {
+                    if (loc_y == 0)
+                    {
+                        y_mod = y_mod * -1;
+                        loc_y++;
+                    }
+                    else
+                        loc_y--;
+                }
+
+                temp++;
+            }
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+        }
+    }
+}
