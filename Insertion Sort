@@ -1,0 +1,58 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[] numberarry;// = new int[3];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+            numberarry = new int[Convert.ToInt32(rows[0])];
+            int temp = 0;
+
+            List<int> insert_sort = new List<int>();
+
+            foreach (string row in rows.Skip(1))
+            {
+                string[] numbers = row.Split(' ');
+                foreach (string number in numbers)
+                    insert_sort.Add(Convert.ToInt32(number));
+                //numberarry[temp++] = Convert.ToInt32(number);
+                temp = 0;
+
+                int min = 0;
+                int max = 0;
+                int mid = 9999999;
+                int index = 1;
+                for (int i = 1; i < insert_sort.Count; i++)
+                {
+                    temp = insert_sort[i];
+                    min = 0;//left
+                    max = i;//right
+                    while (min<max)
+                    {
+                        mid = (min+max)/2;
+                        if (temp >= insert_sort[mid])
+                            min = mid + 1;
+                        else
+                            max = mid;
+                    }
+                    insert_sort.RemoveAt(i);
+                    insert_sort.Insert(min, temp);
+
+                    answer = answer + (i-min).ToString()+' ';
+                }
+            }
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+        }
+    }
+}
