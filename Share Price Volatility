@@ -1,0 +1,56 @@
+namespace CodeAbbey1
+{
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[] numberarry = new int[14];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+            int temp = 0;
+
+            foreach (string row in rows.Skip(1))
+            {
+                string[] numbers = row.Split(' ');
+                foreach (string number in numbers.Skip(1))
+                    numberarry[temp++] = Convert.ToInt32(number);
+                temp = 0;
+                /*
+                double[] Di_array = new double[14];
+                double mean = numberarry.Average();
+                for (int x = 0; x < 3; x++)
+                    Di_array[x] = (numberarry[x] - mean) * (numberarry[x] - mean);//Math.Pow((double)(mean - numberarry[x]), 2);
+                double d = Math.Sqrt(Di_array.Average());
+                //standard_deviation/(average*0.01) > 4;
+                if (d/(mean*0.01)>4)//(4*numberarry[numberarry.Length-1]))
+                    answer=answer+numbers[0]+' ';
+                 * 
+                 * This is why .Net is bad
+                 */
+                double sum = 0;
+                for (int x = 0; x < numberarry.Length; x++)
+                    sum += numberarry[x];
+                double mean = sum / numberarry.Length;
+                double sum_of_dis = 0;
+                for (int x = 0; x < numberarry.Length; x++)
+                    sum_of_dis += Math.Pow(mean - numberarry[x], 2);
+                double d = Math.Sqrt(sum_of_dis / numberarry.Length);
+                if(d/(mean*.01d)>4)
+                    answer = answer + numbers[0] + ' ';
+
+            }
+            
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+        }
+    }
+}
