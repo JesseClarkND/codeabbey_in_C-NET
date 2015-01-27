@@ -1,0 +1,74 @@
+namespace CodeAbbey1
+{
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            decimal[] numberarry = new decimal[3] { 0, 0, 0 };
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+            int temp = 0;
+
+            foreach (string row in rows.Skip(1))
+            {
+                string[] numbers = row.Split(' ');
+                foreach (string number in numbers)
+                    numberarry[temp++] = Convert.ToInt32(number);
+                temp = 0;
+                //numberarry
+                //0 - A
+                //1 - B
+                //2 - C
+
+                double x_1 = 0;
+                double x_2 = 0;
+                double A = (double)numberarry[0];
+                double B = (double)numberarry[1];
+                double C = (double)numberarry[2];
+                //x1 = (-B + sqrt(B^2 - 4*A*C)) / (2*A)
+                //x2 = (-B - sqrt(B^2 - 4*A*C)) / (2*A)
+                //x_1 = (-1*numberarry[1]+(decimal)Math.Sqrt((Math.Pow((double)numberarry[1],2)-(double)(4*numberarry[0]*numberarry[2]))))/(2*numberarry[0]);
+                //x_2 = (-1*numberarry[1]-(decimal)Math.Sqrt((Math.Pow((double)numberarry[1],2)-(double)(4*numberarry[0]*numberarry[2]))))/(2*numberarry[0]);
+                double sqrt_blob = (Math.Pow(B, 2)-(4*A*C));
+                if (sqrt_blob > 0)
+                {
+                    x_1 = (-1 * B + Math.Sqrt(sqrt_blob)) / (2 * A);
+                    x_2 = (-1 * B - Math.Sqrt(sqrt_blob)) / (2 * A);
+                    answer = answer + x_1.ToString() + ' ' + x_2.ToString() + "; ";
+                }
+                else
+                {
+                    sqrt_blob = sqrt_blob * -1;
+                    //x_1 = (-1 * B) / (2 * A) + (Math.Sqrt(sqrt_blob)) / (2 * A);
+                    //x_2 = (-1 * B)/ (2 * A)  - (Math.Sqrt(sqrt_blob)) / (2 * A);
+                    double first_part = (-1 * B) / (2 * A);
+                    double second_part = (Math.Sqrt(sqrt_blob)) / (2 * A);
+                    if (second_part != 0)
+                    {
+                        answer = answer + (first_part).ToString() + '+' + (second_part).ToString() + "i ";
+                        answer = answer + (first_part).ToString() + '-' + (second_part).ToString() + "i; ";
+                    }
+                    else
+                    {
+                        answer = answer + (first_part).ToString() + ' ';
+                        answer = answer + (first_part).ToString() + "; ";
+                    }
+                }
+
+                
+            }
+            
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+        }
+    }
+}
