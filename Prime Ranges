@@ -1,0 +1,63 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+
+
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[] numberarry = new int[2];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+            int[] prime_array = new int[200000];
+            prime_array[0] = 2;
+            prime_array[199999] = 0;
+            int index = 1;
+            int counter = 3;
+            int tempdex = 0;
+
+            while (prime_array[199999] == 0)
+            {
+                if (counter % 2 != 0)
+                {
+                    tempdex = 0;
+                    bool checker = true;
+                    while (prime_array[tempdex] != 0 && tempdex < prime_array.Length)
+                        if (counter % prime_array[tempdex++] == 0)
+                        {
+                            checker = false;
+                            break;
+                        }
+                    if (checker)
+                        prime_array[index++] = counter;
+                }
+                counter++;
+                if (counter>3000000)
+                    break;
+            }
+
+            int temp = 0;
+            foreach (string carrot in rows.Skip(1))
+            {
+                string[] numbers = carrot.Split(' ');
+                foreach (string number in numbers)
+                    numberarry[temp++] = Convert.ToInt32(number);
+                temp = 0;
+                answer = answer + ((Array.IndexOf(prime_array, numberarry[1]) - Array.IndexOf(prime_array, numberarry[0]))+1).ToString() + ' ';
+
+            }
+
+            //temp = 0;
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
