@@ -1,0 +1,69 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+
+
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[] numberarry = new int[2];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+            //So the circle is all the points (x,y) that are "r" away from the center (a,b). 
+            //(x-a)^2 + (y-b)^2 = r^2
+            //minute hand be 9 and the length of the hour hand be 6
+            //clock face so that the center of the face has coordinates 10, 10
+            //(x-10)^2 + (y-10)^2 = 6
+            //(x-10)^2 + (y-10)^2 = 9
+
+            //Ma
+            int temp = 0;
+            foreach (string row in rows.Skip(1))
+            {
+                string[] numbers = row.Split(' ');
+                foreach (string number in numbers)
+                {
+                    string[] digits = number.Split(':');
+                    numberarry[0] = Convert.ToInt32(digits[0]);
+                    numberarry[1] = Convert.ToInt32(digits[1]);
+
+                    double hlen = 6d;
+                    double mlen = 9d;
+                    double xcenter = 10d;
+                    double ycenter = 10d;
+                    //Altered version of this
+                    //http://www.mathworks.com/matlabcentral/fileexchange/22702-xpc-target-wall-time/content/hands.m
+
+                    double degrees = (360d / (12d * 60d)) * ((numberarry[0] % 12d) * 60d) +(numberarry[1]*360.0/(12d*60d));
+                   // double degrees = (360d / (60d)) * ((numberarry[0] % 12d) * 60d) + (numberarry[1]);
+                    double radians = degrees * Math.PI / 180d;
+                    double hx = hlen * Math.Round(Math.Sin(radians),9,MidpointRounding.AwayFromZero);
+                    double hy = hlen * Math.Round(Math.Cos(radians), 9, MidpointRounding.AwayFromZero);
+
+                    degrees = (360d / 60d) * numberarry[1];
+                    radians = degrees * Math.PI / 180d;
+                    double mx = mlen * Math.Round(Math.Sin(radians),9,MidpointRounding.AwayFromZero);
+                    double my = mlen * Math.Round(Math.Cos(radians), 9, MidpointRounding.AwayFromZero);
+
+                    answer = answer + (hx + xcenter).ToString() + ' ' + (hy + ycenter).ToString() + ' ' + (mx + xcenter).ToString() + ' ' + (my + ycenter).ToString() + ' ';
+                }
+                temp = 0;
+
+            }
+
+            //temp = 0;
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
