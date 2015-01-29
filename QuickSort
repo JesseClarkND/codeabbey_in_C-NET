@@ -1,0 +1,89 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static string answer = null;
+
+        static int partition2(int[] arr, int left, int right)
+        {
+            int lt = left;
+            int rt = right;
+            string dir = "left";
+            int pivot = arr[left];
+            while(lt < rt)
+            {
+                if (dir == "left")
+                {
+                    if (arr[rt] > pivot)
+                        rt = rt - 1;
+                    else
+                    {
+                        arr[lt] = arr[rt];
+                        lt = lt + 1;
+                        dir = "right";
+                    }
+                }
+                else
+                {
+                    if (arr[lt] < pivot)
+                        lt = lt + 1;
+                    else
+                    {
+                        arr[rt] = arr[lt];
+                        rt = rt - 1;
+                        dir = "left";
+                    }
+                }
+            }
+            arr[lt] = pivot;
+            return lt;
+        }
+        static void QuickSort(int[] TheArray, int top, int bottom)
+        {
+            int middle;
+            if (top < bottom)
+            {
+                answer = answer + top.ToString() + '-' + bottom.ToString() + ' ';
+                middle = partition2(TheArray, top, bottom);
+                if (top < middle - 1)
+                    QuickSort(TheArray, top, middle - 1);   // sort first section
+                if (bottom > middle + 1)
+                    QuickSort(TheArray, middle + 1, bottom);    // sort second section
+            }
+            return;
+        }
+
+
+        static void Main(string[] args)
+        {
+            string second = null;
+
+            int[] numberarry;// = new int[2];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+            numberarry = new int[Convert.ToInt32(rows[0])];
+
+            //Ma
+            int temp = 0;
+            foreach (string row in rows.Skip(1))
+            {
+                string[] numbers = row.Split(' ');
+                foreach (string number in numbers)
+                    numberarry[temp++] = Convert.ToInt32(number);
+                temp = 0;
+                QuickSort(numberarry, 0, numberarry.Length - 1);
+            }
+
+            //temp = 0;
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
