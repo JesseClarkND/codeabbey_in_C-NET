@@ -1,0 +1,96 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static bool Luhnatic(int[] card_number)
+        {
+            if (Array.IndexOf(card_number, -1) != -1)
+                return false;
+
+            int check_sum = 0;
+            for (int x = 0; x < card_number.Length; x++)
+            {
+                if (card_number[x] != -1)
+                    if (x % 2 == 0)
+                    {
+                        if (card_number[x] * 2 < 9)
+                            check_sum += card_number[x] * 2;
+                        else
+                            check_sum += card_number[x] * 2 - 9; 
+                    }
+                    else
+                        check_sum += card_number[x];
+            }
+            if(check_sum%10==0)
+                return true;
+            return false;
+        }
+
+
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[] numberarry = new int[16];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+            //numberarry = new int[Convert.ToInt32(rows[0])];
+
+            //Ma
+            int temp = 0;
+            foreach (string row in rows.Skip(1))
+            {//row contains the card number
+                temp = 0;
+                foreach (char single in row)
+                {
+                    if (single == '?')
+                        numberarry[temp++] = -1;
+                    else
+                        numberarry[temp++] = Convert.ToInt32(single.ToString());
+                }
+                temp = 0;
+
+                //if (Luhnatic(numberarry))
+                //    answer = answer + row + ' ';
+                if (row.Contains('?'))
+                {
+                    temp = Array.IndexOf(numberarry, -1);
+                    int digit = -1;
+                    while (Luhnatic(numberarry) == false)
+                        numberarry[temp] = ++digit;
+                    for(int y=0;y<numberarry.Length;y++)
+                        answer = answer + numberarry[y];
+                    answer = answer + ' ';
+                }
+                else
+                {
+                    for (int x = 1; x < numberarry.Length; x++)
+                    {
+                        temp = numberarry[x-1];
+                        numberarry[x - 1] = numberarry[x];
+                        numberarry[x] = temp;
+                        if (Luhnatic(numberarry))
+                            break;
+                        temp = numberarry[x - 1];
+                        numberarry[x - 1] = numberarry[x];
+                        numberarry[x] = temp;
+                    }
+                    for (int y = 0; y < numberarry.Length; y++)
+                        answer = answer + numberarry[y];
+                    answer = answer + ' ';
+                }
+            }
+
+            //temp = 0;
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
