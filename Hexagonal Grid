@@ -1,0 +1,60 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            //int[] numberarry = new int[10000];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+
+            int temp = 0;
+            double x = 1;
+            double y = 1;
+            foreach (string row in rows.Skip(1))
+            {
+                foreach (char step in row)
+                {
+                    switch (step)
+                    {
+                        /*
+                    case 'A': x++; break;
+                    case 'D': x--; break;
+                    case 'B': x+=0.5; y++; break;
+                    case 'C': x--; y++; break;
+                    case 'E': x--; y--; break;
+                    case 'F': x++; y--; break;
+                         */
+                        //Simple
+                        case 'A': x++; break;
+                        case 'D': x--; break;
+                        //Up
+                        case 'B': x += .5; y+=Math.Sqrt(1-.25); break;
+                        case 'C': x -= .5; y+=Math.Sqrt(1-.25); break;
+                        //Down
+                        case 'E': x -= .5; y -= Math.Sqrt(1 - .25); break;
+                        case 'F': x += .5; y -= Math.Sqrt(1 - .25); break;
+                    }
+                }
+                double distance = Math.Sqrt(Math.Pow(x - 1, 2) + Math.Pow(y - 1, 2));
+                answer = answer + distance.ToString() + ' ';
+                x = 1;
+                y = 1;
+            }
+
+            //temp = 0;
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
