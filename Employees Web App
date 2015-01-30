@@ -1,0 +1,52 @@
+<?php //NOT C#, as I have php already set up
+//$_GET['name'];
+//$_GET['kill'];
+
+
+if($_GET['name']!='')
+{
+	$myFile = "names.txt";
+	$fh = fopen($myFile, 'a') or die("can't open file");
+	$stringData = $_GET['name'] . "\n";
+	fwrite($fh, $stringData);
+	fclose($fh);
+}
+if($_GET['kill']!='')
+{
+	$myfile = fopen("names.txt", "r") or die("Unable to open file!");
+
+	$skippy = fgets($myfile);
+	$skippy = preg_replace('~[\r\n]+~', '', $skippy);
+
+	file_put_contents("names.txt", "");
+	fclose($myfile);
+
+
+	file_put_contents('names.txt', $skippy."\n",  FILE_APPEND);
+
+
+	$fh = fopen("names.txt", 'r+') or die("can't open file");
+
+	$stat = fstat($fh);
+	ftruncate($fh, $stat['size']-1);
+	fclose($fh); 
+}
+echo "<ul>";
+$myfile = fopen("names.txt", "r") or die("Unable to open file!");
+
+
+do
+{
+	$skippy = fgets($myfile);
+	$skippy = preg_replace('~[\r\n]+~', '', $skippy);
+	if($skippy != '')
+	{
+ 		echo "<li>" . $skippy . "</li>";
+	}
+}while(!feof($myfile));
+
+fclose($myfile);
+echo "</ul>";
+
+
+?>
