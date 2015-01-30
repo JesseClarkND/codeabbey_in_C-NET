@@ -1,0 +1,109 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static string answer = null;
+
+        static void Maze_So_Hard(int x, int y, int row_max, int col_max, int[,] maze, string floating_ans)
+        {
+            if (x >= row_max || y >= col_max)
+                return;
+            else if (x < 0 || y < 0)
+                return;
+            else if (maze[x, y] == 0)//Walked into a wall dummy
+                return;
+            else if (maze[x, y] == 2)
+                return;
+            else if (x == 0 && y == 0)
+            {
+                int count = 1;
+                char char_temp = floating_ans[0];
+                for (int w = 1; w < floating_ans.Length; w++)
+                {
+                    if (char_temp == floating_ans[w])
+                        count++;
+                    else
+                    {
+                        answer = answer + count.ToString() + char_temp.ToString();
+                        count = 1;
+                        char_temp = floating_ans[w];
+                    }
+                }
+                answer = answer + count.ToString() + char_temp.ToString()+' ';
+                return;
+            }
+            else
+            {
+                maze[x, y] = 2;
+                //Try up
+                Maze_So_Hard(x - 1, y, row_max, col_max, maze, floating_ans + 'U');
+                //Try left
+                Maze_So_Hard(x, y - 1, row_max, col_max, maze, floating_ans + 'L');
+                //Try down
+                Maze_So_Hard(x + 1, y, row_max, col_max, maze, floating_ans + 'D');
+                //Try right
+                Maze_So_Hard(x, y + 1, row_max, col_max, maze, floating_ans + 'R');
+            }
+        }
+
+        static void Clearmaze(int[,] arr, int row_max, int col_max)
+        {
+            for(int x =0;x<row_max;x++)
+                for(int y=0;y<col_max;y++)
+                    if(arr[x,y]==2)
+                        arr[x,y]=1;
+        }
+
+        static void Main(string[] args)
+        {
+            string second = null;
+            
+            int[,] numberarry;// = new int[10000];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+            int col_max = Convert.ToInt32(rows[0].Split(' ')[0]);
+            int row_max =  Convert.ToInt32(rows[0].Split(' ')[1]);
+
+            numberarry = new int[row_max, col_max];
+
+            /*Goal: get to X (0,0)
+             * From A: (0,Max)
+             * From B: (Max, 0)
+             * From C: (Max, Max)
+            X-----A
+            -------
+            -------
+            -------
+            B-----C
+            */
+            string floating_answer="";
+            int temp = 0;
+            foreach (string row in rows.Skip(1))
+            {   int col=0;
+                foreach (char digit in row)
+                {
+                    if(digit=='0' || digit=='1')
+                        numberarry[temp, col++] = Convert.ToInt32(digit.ToString());
+                }
+                temp++;
+            }
+            Maze_So_Hard(0, col_max - 1, row_max, col_max, numberarry, floating_answer);
+            Clearmaze(numberarry, row_max,col_max);
+            Maze_So_Hard(row_max-1, 0, row_max, col_max, numberarry, floating_answer);
+            Clearmaze(numberarry, row_max, col_max);
+            Maze_So_Hard(row_max-1, col_max-1, row_max, col_max, numberarry, floating_answer);
+
+
+            //temp = 0;
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
