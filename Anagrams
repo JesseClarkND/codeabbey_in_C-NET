@@ -1,0 +1,68 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[,] numberarry;// = new int[10000];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+            int[] test = new int[26];
+            int[] from_file = new int[26];
+
+            int temp = 0;
+            foreach (string row in rows.Skip(1))
+            {
+                for (int x = 0; x < row.Length; x++)
+                    test[((int)row[x] - 97)]++;
+
+                filePath = "words.txt";
+                streamReader = new StreamReader(filePath);
+                string word_row;
+                int count=0;
+                while((word_row = streamReader.ReadLine()) != null)
+                {
+                    if (row.Length == word_row.Length)
+                    {
+                        if (String.Compare(row, word_row) != 0)
+                        {
+                            for (int x = 0; x < word_row.Length; x++)
+                                from_file[((int)word_row[x] - 97)]++;
+
+                            bool itll_work = true;
+                            for (int x = 0; x < from_file.Length; x++)
+                            {
+                                if (test[x] != from_file[x])
+                                {
+                                    itll_work = false;
+                                    break;
+                                }
+                            }
+                            if (itll_work)
+                                count++;
+                            Array.Clear(from_file, 0, from_file.Length);
+                        }
+                    }
+                }
+                answer = answer + count.ToString() + ' ';
+                Array.Clear(test, 0, test.Length);
+                count = 0;
+            }
+
+
+            //temp = 0;
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
