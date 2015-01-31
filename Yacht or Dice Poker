@@ -1,0 +1,95 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[] numberarry= new int[5];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+/*
+
+    two of dice have the same points, like 3 6 5 6 1 - called pair;
+    three of dice have the same points, like 2 4 5 4 4 - called three;
+    four of dice have the same points, like 1 4 1 1 1 - called four;
+    two pairs at once, like 3 6 5 3 5 - called two pairs;
+
+*/
+
+            int temp = 0;
+            foreach (string row in rows.Skip(1))
+            {
+                bool found = false;
+                numberarry = row.Split(' ').Select(n => int.Parse(n)).ToArray();
+                Array.Sort(numberarry);
+                if(numberarry[0]==2)                                  //sequence from 2 to 6,
+                {
+                    int[] test = Enumerable.Range(2,5).ToArray();
+                    if(Enumerable.SequenceEqual(numberarry,test))
+                    {
+                        answer=answer+"big-straight ";
+                        found = true;
+                    }
+                }
+                if (numberarry[0] == 1 && found==false)             //sequence from 1 to 5
+                {
+                    int[] test = Enumerable.Range(1, 5).ToArray();
+                    if (Enumerable.SequenceEqual(numberarry, test))
+                    {
+                        answer = answer + "small-straight ";
+                        found = true;
+                    }
+                }
+                if (numberarry.Cast<int>().All(x => x == numberarry[0]) && found==false)     //yacht
+                {
+                    answer = answer + "yacht ";
+                    found = true;
+                }
+                var query =
+                    from numbers in numberarry
+                    group numbers by numbers into duplicates
+                    where duplicates.Count() > 1
+                    select new { Item = duplicates.Key, ItemCount = duplicates.Count() };
+                var results = query.ToArray();
+                if (results.Length == 0 && found == false)                        //none
+                {
+                    answer = answer + "none ";
+                    found = true;
+                }
+                if (results.Length == 2 && found == false)
+                {
+                    if ((results[0].ItemCount == 3 || results[1].ItemCount == 3) && (results[0].ItemCount == 2 || results[1].ItemCount == 2))
+                        answer = answer + "full-house ";
+                    else
+                        answer = answer + "two-pairs ";
+                    found = true;
+                }
+                if (results.Length == 1 && found == false)
+                {
+                    if(results[0].ItemCount==4)
+                        answer = answer + "four ";
+                    else if(results[0].ItemCount==3)
+                        answer = answer + "three ";
+                    else
+                        answer = answer + "pair ";
+                }
+                temp++;
+            }
+
+
+            //temp = 0;
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
