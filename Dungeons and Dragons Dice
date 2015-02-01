@@ -1,0 +1,80 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[] numberarry;// = new int[2];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+
+            int temp = 0;
+            foreach (string row in rows)
+            {
+                int spaccount = row.Count(f => f == ' ');
+                numberarry = new int[spaccount+1];
+                numberarry = row.Split(' ').Select(n => int.Parse(n)).ToArray();
+                Array.Sort(numberarry);
+                double min = numberarry[1];//[0] holds the 0 for the line end
+                double max = numberarry[numberarry.Length - 1];
+
+                //Hurr, missed this line!
+                //For this problem dice could have 2, 4, 6, 8, 10 or 12 sides.
+                //The number of dice could be from 1 to 5.
+                bool do_again;
+
+                int og_min = (int)min;
+                int og_max = (int)max;
+
+                do
+                {
+                    do_again = true;
+                    if (min > 0 && min < 6)
+                    {
+                        double sides = (max / min);
+                        if (sides <= 12)
+                        {
+                            if (sides % 2 == 0)
+                            {
+                                answer = answer + min.ToString() + 'd' + (max / min).ToString() + ' ';
+                                do_again = false;
+                            }
+                            else
+                            {
+                                max++;
+                                if(max>(min*12))
+                                {
+                                    min--;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            max = min * 2;
+                            min--;
+                        }
+
+                    }
+                    else
+                    {
+                        min--;
+                    }
+                }
+                while (do_again == true);
+                temp++;
+            }
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
