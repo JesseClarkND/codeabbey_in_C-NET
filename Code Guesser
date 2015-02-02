@@ -1,0 +1,90 @@
+namespace CodeAbbey1
+{
+    public struct NumberGuess
+    {
+        public int number;
+        public double odds;
+    }
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+           // int[,] numberarry;// = new int[4];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+            int info = Convert.ToInt32(rows[0]);
+
+            int length = 4;
+            //These are the columns
+            NumberGuess[] one = new NumberGuess[10];
+            NumberGuess[] two = new NumberGuess[10];
+            NumberGuess[] three = new NumberGuess[10];
+            NumberGuess[] four = new NumberGuess[10];
+
+            for (int x = 0; x < 10; x++)
+            {
+                one[x].number = x;
+                two[x].number = x;
+                three[x].number = x;
+                four[x].number = x;
+
+                one[x].odds = 0.01d;
+                two[x].odds = 0.01d;
+                three[x].odds = 0.01d;
+                four[x].odds = 0.01d;
+            }
+
+            int temp = 0;
+            foreach (string row in rows.Skip(1))
+            {
+                int pug = Convert.ToInt32(row.Split(' ')[1]);
+                if (pug > 0)
+                {
+                    int x = Convert.ToInt32(row.Split(' ')[0][0].ToString());
+                    one[x].odds = one[x].odds + pug;
+                    x = Convert.ToInt32(row.Split(' ')[0][1].ToString());
+                    two[x].odds = two[x].odds + pug;
+
+                    x = Convert.ToInt32(row.Split(' ')[0][2].ToString());
+                    three[x].odds = three[x].odds + pug;
+
+                    x = Convert.ToInt32(row.Split(' ')[0][3].ToString());
+                    four[x].odds = four[x].odds + pug;
+                
+                    }
+                    else
+                    {
+                                        int x = Convert.ToInt32(row.Split(' ')[0][0].ToString());
+                    one[x].odds = one[x].odds - 1000;
+                    x = Convert.ToInt32(row.Split(' ')[0][1].ToString());
+                    two[x].odds = two[x].odds - 1000;
+
+                    x = Convert.ToInt32(row.Split(' ')[0][2].ToString());
+                    three[x].odds = three[x].odds - 1000;
+
+                    x = Convert.ToInt32(row.Split(' ')[0][3].ToString());
+                    four[x].odds = four[x].odds - 1000;
+                    }
+
+                temp++;
+
+            }
+            // Star_Arr = Star_Arr.OrderBy(e => e.y).ThenBy(e => e.x).ToArray();
+            one = one.OrderBy(e => e.odds).ToArray();
+            two = two.OrderBy(e => e.odds).ToArray();
+            three = three.OrderBy(e => e.odds).ToArray();
+            four = four.OrderBy(e => e.odds).ToArray();
+            answer = one[9].number.ToString() + two[9].number.ToString() + three[9].number.ToString() + four[9].number.ToString();
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
