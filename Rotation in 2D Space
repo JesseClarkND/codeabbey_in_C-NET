@@ -1,0 +1,60 @@
+namespace CodeAbbey1
+{
+    public struct Star_Loc
+    {
+        public string Star_Name;
+        public double x;
+        public double y;
+    }
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[] numberarry;// = new int[2];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+            string[] info = rows[0].Split(' ');
+            double rot = double.Parse(info[1]);
+            rot = rot * Math.PI / 180d;
+            Star_Loc[] Star_Arr = new Star_Loc[Convert.ToInt32(info[0])];
+
+            int temp = 0;
+            foreach (string row in rows.Skip(1))
+            {
+                string[] bits = row.Split(' ');
+                //numberarry = row.Split(' ').Select(n => int.Parse(n)).ToArray();
+                Star_Arr[temp].Star_Name = bits[0];
+                Star_Arr[temp].x = double.Parse(bits[1]);
+                Star_Arr[temp].y = double.Parse(bits[2]);
+
+                double temp_x = Star_Arr[temp].x;
+                double temp_y = Star_Arr[temp].y;
+                //Rotate it bro
+                //Star_Arr[temp].x = Math.Round((Star_Arr[temp].x * Math.Cos(rot)) + (Star_Arr[temp].y * Math.Sin(rot)), 7, MidpointRounding.AwayFromZero);
+                //Star_Arr[temp].y = Math.Round((Star_Arr[temp].x * Math.Sin(rot)) - (Star_Arr[temp].y * Math.Cos(rot)), 7, MidpointRounding.AwayFromZero);
+                Star_Arr[temp].x = Math.Round((temp_x * Math.Cos(rot)) - (temp_y * Math.Sin(rot)), 7, MidpointRounding.AwayFromZero);
+                Star_Arr[temp].y = Math.Round((temp_x * Math.Sin(rot)) + (temp_y * Math.Cos(rot)), 7, MidpointRounding.AwayFromZero);
+                //Star_Arr[temp].x = Math.Round((Star_Arr[temp].x*Math.Cos(rot))+(Star_Arr[temp].y*Math.Sin(rot)), 10, MidpointRounding.AwayFromZero);
+                //Star_Arr[temp].y = Math.Round(((Star_Arr[temp].x * -1) * Math.Sin(rot)) + (Star_Arr[temp].y * Math.Cos(rot)), 10, MidpointRounding.AwayFromZero);
+                temp++;
+            }
+            //Sort here
+            Star_Arr = Star_Arr.OrderBy(e => e.y).ThenBy(e => e.x).ToArray();
+            //Star_Arr = Star_Arr.OrderBy(e => e.y).ToArray();// ThenBy(e => e.x).ToArray();
+
+            foreach (Star_Loc one in Star_Arr)
+                answer = answer + one.Star_Name + ' ';
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
