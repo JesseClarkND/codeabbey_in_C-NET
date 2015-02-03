@@ -1,0 +1,83 @@
+namespace CodeAbbey1
+{
+    public struct Girl
+    {
+        public double breasts;
+        public double legs;
+    }
+    public struct Pig
+    {
+        public int breasts;
+        public int legs;  
+    }
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+           // int[,] numberarry;// = new int[4];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+            int info = Convert.ToInt32(rows[0]);
+
+            Girl girl=new Girl();
+            Pig pig = new Pig();
+            girl.breasts=2;
+            girl.legs=2;
+            pig.legs=4;
+
+
+            int temp = 0;
+            foreach (string row in rows.Skip(1))
+            {//[0] legs [1] breasts
+                temp = 0;
+                int leg_max = Convert.ToInt32(row.Split(' ')[0]);
+                int boob_max = Convert.ToInt32(row.Split(' ')[1]);
+
+                int pig_multiplyer = 1;
+                int girl_multiplyer = 1;
+                bool flipped = true;
+                while(true)
+                {
+                    double leg = leg_max - ((girl_multiplyer * girl.legs) + (pig_multiplyer * pig.legs));
+                    double qalm = (boob_max - (girl_multiplyer * girl.breasts));
+                    if (qalm != 0)
+                    {
+                        double boob = (qalm / pig_multiplyer) % 2;
+                        if (leg == 0)
+                        {
+                            if (boob == 0)
+                            {
+                                temp++;
+
+                            }
+                            girl_multiplyer++;
+                        }
+                        else if (leg > 0)
+                        {
+                            girl_multiplyer++;
+                        }
+                        else
+                        {
+                            girl_multiplyer = 1;
+                            pig_multiplyer++;
+                            if ((pig_multiplyer * pig.legs) > leg_max)
+                                break;
+                        }
+                    }
+                }
+                answer = answer + temp.ToString() + ' ';
+            }
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
