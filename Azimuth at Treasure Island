@@ -1,0 +1,42 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[] numberarry = new int[2];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+            int temp = 0;
+            double endX=0;
+            double endY=0;
+            double beginX=0;
+            double beginY=0;
+            foreach (string row in rows.Skip(1))
+            {
+                beginX = endX;
+                beginY = endY;
+                string[] numbers = row.Split(' ');
+                if(String.Compare(numbers[0],"Dig")!=0)
+                {
+                   double distance = Double.Parse(numbers[1]);
+                   double angle = Double.Parse(numbers[5]);
+                   angle = angle * Math.PI / 180.0d;
+                   endX = beginX + distance * Math.Cos(angle);
+                   endY = beginY + distance * Math.Sin(angle);
+                }
+            }
+            answer = Math.Round(beginY, 0, MidpointRounding.AwayFromZero).ToString() + ' ' + Math.Round(beginX, 0, MidpointRounding.AwayFromZero).ToString();
+            Console.WriteLine("The answer is:");
+            Console.Write(answer);
+            Console.ReadKey();
+        }
+    }
+}
