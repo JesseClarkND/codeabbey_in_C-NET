@@ -1,0 +1,70 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static double Dist_my_Pants(double x1, double y1, double x2, double y2)
+        {
+            return Math.Pow((x1 - x2),2) + Math.Pow((y1 - y2),2);
+        }
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[] numberarry = new int[2];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+            double temp = 0;
+            foreach (string row in rows.Skip(1))
+            {
+                string[] numbers = row.Split(' ');
+                //x1 y1 x2 y2 xp yp
+                double x1 = double.Parse(numbers[0]);//v
+                double y1 = double.Parse(numbers[1]);
+
+                double x2 = double.Parse(numbers[2]);//w
+                double y2 = double.Parse(numbers[3]);
+
+                double xp = double.Parse(numbers[4]);
+                double yp = double.Parse(numbers[5]);
+
+                double length = Dist_my_Pants(x1, y1, x2, y2);
+                if (length == 0)
+                {
+                    answer = answer + Math.Round(Math.Sqrt(Dist_my_Pants(xp, yp, x1, y1)), 10, MidpointRounding.AwayFromZero).ToString();
+                }
+                else
+                {
+                    //var t = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l2;
+                    temp = ((xp - x1) * (x2 - x1) + (yp - y1) * (y2 - y1)) / length;
+                    if (temp < 0)
+                    {
+                        answer = answer + Math.Round(Math.Sqrt(Dist_my_Pants(xp, yp, x1, y1)), 10, MidpointRounding.AwayFromZero).ToString();
+                    }
+                    else
+                    {
+                        if (temp > 1)
+                        {
+                            answer = answer + Math.Round(Math.Sqrt(Dist_my_Pants(xp, yp, x2, y2)), 10, MidpointRounding.AwayFromZero).ToString();
+                        }
+                        else
+                        {
+                            double temp_x = x1 + temp * (x2 - x1);
+                            double temp_y = y1 + temp * (y2 - y1);
+                            answer = answer + Math.Round(Math.Sqrt(Dist_my_Pants(xp, yp, temp_x, temp_y)), 10, MidpointRounding.AwayFromZero).ToString();
+                        }
+                    }
+                }
+                answer = answer + ' ';
+                temp = 0;
+            }
+            Console.WriteLine("The answer is:");
+            Console.Write(answer);
+            Console.ReadKey();
+        }
+    }
+}
