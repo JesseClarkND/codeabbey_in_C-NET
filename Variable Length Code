@@ -1,0 +1,57 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            double[,] numberarry;// = new decimal[3];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+            StringBuilder real_answer = new StringBuilder();
+            //0 -a
+            //25 -z
+            //26 !
+            //27 ' '
+            string[] alphabetprus = new string[28] {"011","0000010","000101","00101","101","000100","0000100","0011","01001",
+                                                   "000000001","0000000001","001001", "000011","10000","10001", "0000101",
+                                                    "000000000001","01000","0101", "1001", "00011","00000001", "0000011",
+                                                    "00000000001", "0000001", "000000000000", "001000","11"};
+            int temp = 0;
+            foreach (string row in rows)
+            {
+                char[] message = row.ToArray();
+
+                for(int x=0;x<message.Length;x++)
+                {
+                    if (message[x] == ' ')
+                        answer = answer + alphabetprus[27];
+                    else if (message[x] == '!')
+                        answer = answer + alphabetprus[26];
+                    else
+                        answer = answer + alphabetprus[message[x] - 97];
+                }
+               // answer.PadRight(answer.Length % 8, '0');
+                for (int x = 0; x < answer.Length % 8; x++)
+                    answer = answer + '0';
+                for (int i = 0; i < answer.Length; i += 8)
+                {
+                    string subby = answer.Substring(i, 8);
+                    real_answer.AppendFormat("{0:X2}", Convert.ToByte(subby, 2));
+                    real_answer.Append(' ');
+                }
+            }
+
+
+            Console.WriteLine("The answer is:");
+            Console.Write(real_answer);
+            Console.ReadKey();
+
+        }
+    }
+}
