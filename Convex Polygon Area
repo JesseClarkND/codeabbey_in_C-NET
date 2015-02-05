@@ -1,0 +1,44 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            double[,] numberarry;// = new decimal[3];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+            int length = Convert.ToInt32(rows[0]);
+            numberarry = new double[length, 2];
+
+            int temp = 0;
+            foreach (string row in rows.Skip(1))
+            {
+                numberarry[temp, 0] = double.Parse(row.Split(' ')[0]);
+                numberarry[temp++, 1] = double.Parse(row.Split(' ')[1]);
+            }
+            temp = 0;
+
+            double running_tots = 0;
+            for (int x = 0; x < length - 1; x++)
+            {//0 -x 1 -y
+                double trouble = numberarry[x + 1, 0] - numberarry[x, 0];
+                    running_tots = running_tots + ((numberarry[x, 1] + numberarry[x + 1, 1]) / 2.0d) * (trouble);
+
+            }
+            double yolk = numberarry[0, 0]-numberarry[length-1, 0];
+            running_tots = running_tots + ((numberarry[0, 1] + numberarry[length-1, 1]) / 2.0d) * (yolk);
+            answer = Math.Abs(running_tots).ToString();
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
