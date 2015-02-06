@@ -1,0 +1,103 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            double[,] numberarry;// = new decimal[3];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+            int[] memory = new int[12];
+            int memory_pointer = 0;
+            int[] inputs = new int[12];
+            int input_pointer=0;
+            int temp = 0;
+
+            //Get the inputs
+            foreach (string row in rows.Skip(1))
+            {
+                string[] numbers = row.Split(' ');
+                foreach (string number in numbers)
+                    inputs[temp++] = Convert.ToInt32(number);
+            }
+            temp = 0;
+
+            //Run the program
+            string program = rows[0];
+            //foreach (char command in program)
+            for(int loc=0; loc<program.Length;loc++)
+            {
+                switch(program[loc])
+                {
+                    case ';':
+                        memory[memory_pointer] = inputs[input_pointer++]; break;
+                    case '>':
+                        memory_pointer++; break;
+                    case '<':
+                        memory_pointer--; break;
+                    case '+':
+                        memory[memory_pointer]++; break;
+                    case '-':
+                        memory[memory_pointer]--; break;
+                    case '.':
+                        answer = answer + ((char)memory[memory_pointer]).ToString() + ' '; break;
+                    case ',':
+                        memory[memory_pointer] = (char)inputs[input_pointer++]; break;
+                    case ':':
+                        answer = answer + memory[memory_pointer].ToString() + ' '; break;
+                    case '['://No bounds checking
+                        if (memory[memory_pointer] == 0)
+                        {//Go to the loop end
+                            int left_bracket = 1;
+                            int temp_index = loc+1;
+                            while (true)
+                            {
+                                if (program[temp_index] == '[')
+                                    left_bracket++;
+                                if (program[temp_index] == ']')
+                                    left_bracket--;
+                                if (left_bracket == 0)
+                                {
+                                    loc = temp_index;
+                                    break;
+                                }
+                                temp_index++;
+                            }
+                        }
+                        break;
+                    case ']'://No bounds checking
+                            int right_bracket = 1;
+                            int temp_indexx = loc-1;
+                            while (true)
+                            {
+                                if (program[temp_indexx] == '[')
+                                    right_bracket--;
+                                if (program[temp_indexx] == ']')
+                                    right_bracket++;
+                                if (right_bracket == 0)
+                                {
+                                    loc = temp_indexx-1;
+                                    break;
+                                }
+                                temp_indexx--;
+                            }
+                        break;
+                }
+            }
+
+
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
