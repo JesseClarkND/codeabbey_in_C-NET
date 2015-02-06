@@ -1,0 +1,90 @@
+namespace CodeAbbey1
+{
+    enum Notes
+    {
+        C=0, CS, D, DS, E, F, FS, G, GS, A, AS,B
+    }
+    class Program
+    {
+
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[,] numberarry;// = new int[10000];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+            //C  C#  D  D#  E  F  F#  G  G#  A  A#  B
+
+            double temp = 0;
+            foreach (string row in rows.Skip(1))
+            {
+                string[] notes = row.Split(' ');
+                foreach (string note in notes)
+                {
+                    double base_range = 27.5d;
+                    double max_range = 2 * base_range;
+
+                    if (note.Length == 3)//Its a sharp
+                    {
+                        int octave = Convert.ToInt32(note[2].ToString());
+                        for (int x = 1; x < octave; x++)
+                        {
+                            base_range = max_range;
+                            max_range = 2 * base_range;
+                        }
+                        char[] noter = new char[2];
+                        noter[0] = note[0];
+                        noter[1] = 'S';
+                        string walka = new String(noter);
+                        Notes the_note;
+                        if (Enum.TryParse(walka, out the_note))
+                        {
+                            //temp = base_range + (((max_range - base_range) / 12) * (int)the_note);
+                            temp = Math.Round(max_range * Math.Pow(1.059463d, ((9 - (int)the_note) * -1)), 0, MidpointRounding.AwayFromZero);
+
+                            answer = answer + temp.ToString() + ' ';
+                        }
+                        else
+                            answer = answer + "bbbbbbbbbpbpbpbpbpbpbpbp ";
+                    }
+                    else
+                    {
+                        int octave= Convert.ToInt32(note[1].ToString());
+                        for(int x=1;x<octave;x++)
+                        {
+                            base_range=max_range;
+                            max_range=2*base_range;
+                        }
+                        char[] noter = new char[1];
+                        noter[0] = note[0];
+                        string walka = new String(noter);
+                        Notes the_note;
+                        if (Enum.TryParse(walka, out the_note))
+                        {
+                            //temp = base_range + (((max_range - base_range) / 12) * (int)the_note);
+                            temp = Math.Round(max_range * Math.Pow(1.059463d, ((9 - (int)the_note) * -1)), 0, MidpointRounding.AwayFromZero);
+                            answer = answer + temp.ToString() + ' ';
+                        }
+                        else
+                            answer = answer + "bbbbbbbbbpbpbpbpbpbpbpbp ";
+                    }
+                }
+            }
+
+
+
+            //temp = 0;
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.ToString());
+            Console.ReadKey();
+
+        }
+    }
+}
