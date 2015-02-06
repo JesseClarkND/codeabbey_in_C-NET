@@ -1,0 +1,80 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static int answer = 0;
+
+
+        static void Maze_So_Hard(int x, int y, int row_max, int col_max, char[,] maze)
+        {
+            if (x >= row_max || y >= col_max)
+                return;
+            else if (x < 0 || y < 0)
+                return;
+            else if (maze[x, y] == 'X')//Walked into a wall dummy
+                return;
+            else if (maze[x, y] == '#')
+                return;
+            else if (maze[x, y] == '$')
+            {
+                answer++;
+                return;
+            }
+            else
+            {
+                maze[x, y] = '#';
+                //Try down
+                Maze_So_Hard(x + 1, y, row_max, col_max, maze);
+                maze[x, y] = '+';
+                //Try right
+                Maze_So_Hard(x, y + 1, row_max, col_max, maze);
+                maze[x, y] = '+';
+            }
+        }
+
+        static void Clearmaze(char[,] arr, int row_max, int col_max)
+        {
+            for(int x =0;x<row_max;x++)
+                for(int y=0;y<col_max;y++)
+                    if(arr[x,y]=='#')
+                        arr[x,y]='+';
+        }
+
+        static void Main(string[] args)
+        {
+            string second = null;
+            
+            int[,] numberarry;// = new int[10000];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+            int col_max = Convert.ToInt32(rows[0].Split(' ')[1]);
+            int row_max =  Convert.ToInt32(rows[0].Split(' ')[0]);
+
+            char[,] swamp_map = new char[row_max, col_max];
+
+            int temp = 0;
+            foreach (string row in rows.Skip(1))
+            {   int col=0;
+                foreach (char digit in row)
+                {
+                    if (digit == '@' || digit == '+' || digit == 'X' || digit == '$')
+                        swamp_map[temp, col++] = digit;
+                }
+                temp++;
+            }
+            Maze_So_Hard(0, 0, row_max, col_max, swamp_map);
+
+
+            //temp = 0;
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.ToString());
+            Console.ReadKey();
+
+        }
+    }
+}
