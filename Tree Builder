@@ -1,0 +1,113 @@
+namespace CodeAbbey1
+{
+    class Node
+    {
+        public int value;
+        public Node Left, Right;
+
+        public Node(int item)
+        {
+            value = item;
+            Left = null;
+            Right = null;
+        }
+    }
+
+    class BinaryTree
+    {
+        public Node root;
+        static int node_count;
+        public string the_answer;
+
+        public BinaryTree()
+        {
+            root = null;
+            node_count = 0;
+            the_answer = "";
+        }
+
+        public void Add(int turd)
+        {
+            node_count++;
+            if (root == null)
+            {
+                root = new Node(turd);
+            }
+            else
+                Insert_Node(this.root, turd);
+        }
+
+        private void Insert_Node(Node root, int new_value)
+        {
+            //Node new_node = new Node(new_value);
+            if (root.value > new_value) //Less then goes left side
+            {
+                if (root.Left == null)
+                    root.Left = new Node(new_value);
+                else
+                    Insert_Node(root.Left, new_value);
+            }
+            else
+            {
+                if (root.Right == null)
+                    root.Right = new Node(new_value);
+                else
+                    Insert_Node(root.Right, new_value);
+            }
+        }
+
+        public void Travserse_Tree(Node trav, int from)
+        {//((-,2,-),3,((-,4,-),5,(-,8,-)))
+            if (trav == null)
+            {
+                if(from==1)
+                    the_answer = the_answer + "-";
+                else if(from==2)
+                    the_answer = the_answer + "-";
+                return;
+            }
+                the_answer = the_answer + '(';
+            Travserse_Tree(trav.Left, 1);
+                the_answer = the_answer + ',';
+            the_answer = the_answer + trav.value;
+                the_answer = the_answer + ',';
+            Travserse_Tree(trav.Right, 2);
+                the_answer = the_answer + ')';
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            double[,] numberarry;// = new decimal[3];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+            int temp = 0;
+            BinaryTree Its_A_Pine = new BinaryTree();
+            foreach (string row in rows.Skip(1))
+            {
+                string[] numbers = row.Split(' ');
+                foreach (string number in numbers)
+                {
+                    Its_A_Pine.Add(Convert.ToInt32(number));
+                }
+            }
+            Node yoko = new Node(0);
+            Its_A_Pine.Travserse_Tree(Its_A_Pine.root, 0);
+
+
+            Console.WriteLine("The answer is:");
+            Console.Write(Its_A_Pine.the_answer);
+            Console.ReadKey();
+
+        }
+    }
+}
