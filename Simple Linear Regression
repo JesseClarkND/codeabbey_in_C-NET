@@ -1,0 +1,82 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+        public static void LinearRegression(double[] xVals, double[] yVals,
+       int inclusiveStart, int exclusiveEnd,
+       out double rsquared, out double yintercept,
+       out double slope)
+        {
+            /*https://gist.github.com/tansey/1375526*/
+            /*From tansey*/
+            /*Tansey gets all credit for this function, i only implement it*/
+           // Debug.Assert(xVals.Length == yVals.Length);
+            double sumOfX = 0;
+            double sumOfY = 0;
+            double sumOfXSq = 0;
+            double sumOfYSq = 0;
+            double ssX = 0;
+            double ssY = 0;
+            double sumCodeviates = 0;
+            double sCo = 0;
+            double count = exclusiveEnd - inclusiveStart;
+
+            for (int ctr = inclusiveStart; ctr < exclusiveEnd; ctr++)
+            {
+                double x = xVals[ctr];
+                double y = yVals[ctr];
+                sumCodeviates += x * y;
+                sumOfX += x;
+                sumOfY += y;
+                sumOfXSq += x * x;
+                sumOfYSq += y * y;
+            }
+            ssX = sumOfXSq - ((sumOfX * sumOfX) / count);
+            ssY = sumOfYSq - ((sumOfY * sumOfY) / count);
+            double RNumerator = (count * sumCodeviates) - (sumOfX * sumOfY);
+            double RDenom = (count * sumOfXSq - (sumOfX * sumOfX)) * (count * sumOfYSq - (sumOfY * sumOfY));
+            sCo = sumCodeviates - ((sumOfX * sumOfY) / count);
+
+            double meanX = sumOfX / count;
+            double meanY = sumOfY / count;
+            double dblR = RNumerator / Math.Sqrt(RDenom);
+            rsquared = dblR * dblR;
+            yintercept = meanY - ((sCo / ssX) * meanX);
+            slope = sCo / ssX;
+        } 
+
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            //int[,] numberarry;// = new int[10000];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+            int total_years = Convert.ToInt32(rows[0].Split(' ')[1]) - Convert.ToInt32(rows[0].Split(' ')[0])+1;
+
+            int temp = 0;
+            double[] exes = new double[total_years];
+            double[] whys = new double[total_years];
+            foreach (string row in rows.Skip(1))
+            {
+                exes[temp] = double.Parse(row.Split(' ')[1]);
+                whys[temp] = double.Parse(row.Split(' ')[2]);
+                temp++;
+            }
+            double r_squart;
+            double y_intercept;
+            double sloper;
+            LinearRegression(exes, whys, 0, total_years, out r_squart, out y_intercept, out sloper);
+            answer = sloper.ToString() + ' ' + y_intercept.ToString();
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.ToString());
+            Console.ReadKey();
+
+        }
+    }
+}
