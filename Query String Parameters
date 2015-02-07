@@ -1,0 +1,14 @@
+//Sorry, this is php, but its what the problem demands
+//Should have done it in ASP, but I don't have a windows server up and running
+<?php
+$A = 34;
+$B = 46;
+$C = 11;
+$month = $_GET['month'];
+$day = $_GET['day'];
+$year = $_GET['year'];
+$name = $_GET['name'];
+$lucky = (strlen($name) * $A + $month * $B + $day * $C + $year) % 31 + 1;
+echo "Your lucky day is " . $lucky;
+
+?>
