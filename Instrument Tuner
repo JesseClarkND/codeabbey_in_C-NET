@@ -1,0 +1,90 @@
+namespace CodeAbbey1
+{
+
+    class Program
+    {
+
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[,] numberarry;// = new int[10000];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+            //C  C#  D  D#  E  F  F#  G  G#  A  A#  B
+
+            double temp = 0;
+            foreach (string row in rows.Skip(1))
+            {
+                string[] freqs = row.Split(' ');
+                foreach (string freq in freqs)
+                {
+                    double bumber = double.Parse(freq);
+                    double base_range = 30.868d;//31.7855d
+                    double max_range = 2 * base_range;
+                    int octave = -1;
+                    if (bumber <= base_range)
+                        octave = 0;
+                    else
+                    {
+                        for (int i = 1; i < 11; i++)
+                        {
+                            if (bumber <= max_range)
+                            {
+                                octave = i;
+                                break;
+                            }
+                            base_range = max_range;
+                            max_range = 2 * base_range;
+
+                        }
+                    }
+                    double[] difference_arr = new double[12];
+                    for (int x = 0; x < 12; x++)
+                    {
+                        difference_arr[x] = Math.Abs(bumber - (Math.Round(max_range * Math.Pow(1.059463d, ((11 - x) * -1)), 0, MidpointRounding.AwayFromZero)));
+                    }
+                    int actualnote = Array.IndexOf(difference_arr, difference_arr.Min());
+                    //C=0, CS, D, DS, E, F, FS, G, GS, A, AS,B
+                    switch (actualnote)
+                    {
+                        case 0:
+                            answer = answer + "C"; break;
+                        case 1:
+                            answer = answer + "C#"; break;
+                        case 2:
+                            answer = answer + "D"; break;
+                        case 3:
+                            answer = answer + "D#"; break;
+                        case 4:
+                            answer = answer + "E"; break;
+                        case 5:
+                            answer = answer + "F"; break;
+                        case 6:
+                            answer = answer + "F#"; break;
+                        case 7:
+                            answer = answer + "G"; break;
+                        case 8:
+                            answer = answer + "G#"; break;
+                        case 9:
+                            answer = answer + "A"; break;
+                        case 10:
+                            answer = answer + "A#"; break;
+                        case 11:
+                            answer = answer + "B"; break;
+                    }
+                    answer = answer + octave.ToString() + ' ';
+                }
+            }
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.ToString());
+            Console.ReadKey();
+
+        }
+    }
+}
