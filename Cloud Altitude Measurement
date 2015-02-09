@@ -1,0 +1,48 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            double[] numberarry = new double[3];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+            int[] num_ans = new int[11];
+            string[] commands = new string[1];
+
+            double temp = 0;
+            foreach (string row in rows.Skip(1))
+            {
+                numberarry[0] = double.Parse(row.Split(' ')[0]);//D1
+                numberarry[1] = double.Parse(row.Split(' ')[1]);//angle A
+                numberarry[2] = double.Parse(row.Split(' ')[2]);//angle B
+                numberarry[1] = numberarry[1] * Math.PI / 180.0d;
+                numberarry[2] = numberarry[2] * Math.PI / 180.0d;
+                /*α = angle of elevation numberarry[1]
+                  β = angle of elevation numberarry[2]
+                  d = distance between points numberarry[0]
+                  h = height of mountain
+
+                  h = (d * tan β * tan α) / (tan β - tan α)
+                   */
+                numberarry[1] = Math.Tan(numberarry[1]);
+                numberarry[2] = Math.Tan(numberarry[2]);
+                temp = (numberarry[0] * numberarry[1] * numberarry[2]) / (numberarry[2] - numberarry[1]);
+
+                temp = Math.Round(temp, 0, MidpointRounding.AwayFromZero);
+                answer = answer + temp.ToString() + ' ';
+            }
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.ToString());
+            Console.ReadKey();
+
+        }
+    }
+}
