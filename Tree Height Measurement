@@ -1,0 +1,36 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            double[] numberarry = new double[2];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+            int[] num_ans = new int[11];
+            string[] commands = new string[1];
+
+            double temp = 0;
+            foreach (string row in rows.Skip(1))
+            {
+                numberarry[0] = double.Parse(row.Split(' ')[0]);
+                numberarry[1] = double.Parse(row.Split(' ')[1]);
+                numberarry[1] = (numberarry[1]-90.0d) * Math.PI / 180.0d;
+                numberarry[1] = Math.Tan(numberarry[1]);
+                temp = Math.Round(numberarry[0] * numberarry[1], 0, MidpointRounding.AwayFromZero);
+                answer = answer + temp.ToString() + ' ';
+            }
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.ToString());
+            Console.ReadKey();
+
+        }
+    }
+}
