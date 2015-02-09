@@ -1,0 +1,70 @@
+namespace CodeAbbey1
+{
+    class Program
+    {         
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            double[] numberarry = new double[3];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+            int[] num_ans = new int[11];
+            string[] commands = new string[1];
+
+
+            List<int>[] Array_Of_Towns = new List<int>[0];
+            List<string> known_towns = new List<string>();
+
+            int temp = 0;
+            foreach (string row in rows.Skip(1))
+            {
+                bool first = true;
+                string[] roads = row.Split(' ');
+                foreach(string road in roads.Skip(1))
+                {
+                    string[] towns = road.Split('-');
+                    //Check if towns exist
+                    if (!known_towns.Contains(towns[0]))
+                    {
+                        known_towns.Add(towns[0]);
+                        Array.Resize(ref Array_Of_Towns, Array_Of_Towns.Length + 1);
+                        Array_Of_Towns[Array_Of_Towns.Length - 1] = new List<int>();
+                    }
+                    if (!known_towns.Contains(towns[1]))
+                    {
+                        known_towns.Add(towns[1]);
+                        Array.Resize(ref Array_Of_Towns, Array_Of_Towns.Length + 1);
+                        Array_Of_Towns[Array_Of_Towns.Length - 1] = new List<int>();
+                    }
+
+                    if (first)
+                    {
+                        Array_Of_Towns[known_towns.IndexOf(towns[0])].Add(known_towns.IndexOf(towns[1]));
+                        Array_Of_Towns[known_towns.IndexOf(towns[1])].Add(known_towns.IndexOf(towns[0]));
+                        first = false;
+                    }
+                    else
+                    {
+                        Array_Of_Towns[known_towns.IndexOf(towns[0])].Add(known_towns.IndexOf(towns[1]));
+                    }
+                }
+                for (int x = 0; x < known_towns.Count; x++)
+                    temp = temp+ (Array_Of_Towns[x].Count-1);
+                answer = answer + (temp).ToString() + ' ';
+                Array_Of_Towns = new List<int>[0];
+                known_towns = new List<string>();
+                temp = 0;
+            }
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.ToString());
+            Console.ReadKey();
+
+        }
+    }
+}
