@@ -1,0 +1,209 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static void Print_Game(int[,] game)
+        {
+            for (int x = 0; x < 4; x++)
+            {
+                for (int y = 0; y < 4; y++)
+                {
+                    Console.Write(' ' + game[x, y].ToString() + ' ');
+                }
+                Console.Write('\n');
+            }
+        }
+        static void Drop_Row(int colrow, int[,] game, int d)//0-R
+        {
+            if (d == 0)//Move Right
+            {
+                for (int x = 3; x > 0; x--)
+                {
+                    if (game[colrow, x] == game[colrow, x - 1])
+                    {
+                        game[colrow, x - 1] += game[colrow, x - 1];
+                        game[colrow, x] = 0;
+                        x--;
+                    }
+                }
+                for (int y = 0; y < 2; y++)
+                {
+                    for (int x = 3; x > 0; x--)
+                    {
+                        if (game[colrow, x] == 0 && game[colrow, x - 1] != 0)
+                        {
+                            game[colrow, x] = game[colrow, x - 1];
+                            game[colrow, x - 1] = 0;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                for (int x = 0; x < 3; x++)
+                {
+                    if (game[colrow, x] == game[colrow, x + 1])
+                    {
+                        game[colrow, x + 1] += game[colrow, x + 1];
+                        game[colrow, x] = 0;
+                        x++;
+                    }
+                }
+                for (int y = 0; y < 2; y++)
+                {
+                    for (int x = 0; x < 3; x++)
+                    {
+                        if (game[colrow, x] == 0 && game[colrow, x + 1] != 0)
+                        {
+                            game[colrow, x] = game[colrow, x + 1];
+                            game[colrow, x + 1] = 0;
+                        }
+                    }
+                }
+            }
+        }
+
+        static void Drop_Column(int colrow, int[,] game, int d)//direction 0-D
+        {
+            if (d == 0)
+            {//if moving "down" and we have 3 similar tiles in column, two lowest are joined.
+                //start at bottom and work way up
+                for (int x = 3; x > 0; x--)
+                {
+                    if (game[x, colrow] == game[x - 1, colrow])
+                    {
+                        game[x - 1, colrow] += game[x - 1, colrow];
+                        game[x, colrow] = 0;
+                        x--;
+                    }
+                }
+                for (int y = 0; y < 2; y++)
+                {
+                    for (int x = 3; x > 0; x--)
+                    {
+                        if (game[x, colrow] == 0 && game[x - 1, colrow] != 0)
+                        {
+                            game[x, colrow] = game[x - 1, colrow];
+                            game[x - 1, colrow] = 0;
+                        }
+                    }
+                }
+            }
+            else
+            {//Move Up
+                for (int x = 0; x < 3; x++)
+                {
+                    if (game[x, colrow] == game[x + 1, colrow])
+                    {
+                        game[x + 1, colrow] += game[x + 1, colrow];
+                        game[x, colrow] = 0;
+                        x++;
+                    }
+                }
+                for (int y = 0; y < 2; y++)
+                {
+                    for (int x = 0; x < 3; x++)
+                    {
+                        if (game[x, colrow] == 0 && game[x + 1, colrow] != 0)
+                        {
+                            game[x, colrow] = game[x + 1, colrow];
+                            game[x + 1, colrow] = 0;
+                        }
+                    }
+                }
+            }
+
+        }
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[,] numberarry = new int[4, 4];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+            int[] num_ans = new int[11];
+            string[] commands = new string[1];
+
+            int temp = 0;
+            foreach (string row in rows)
+            {
+                if (temp == 4)
+                {
+                    commands = row.Split(' ');
+                }
+                else
+                {
+                    string[] numbers = row.Split(' ');
+                    int x = 0;
+                    foreach (string number in numbers)
+                        numberarry[temp, x++] = Convert.ToInt32(number);
+                }
+                temp++;
+            }
+
+            for (int x = 0; x < commands.Length; x++)
+            {
+                switch (commands[x])
+                {
+                    case "D":
+                        Drop_Column(0, numberarry, 0);
+                        Drop_Column(1, numberarry, 0);
+                        Drop_Column(2, numberarry, 0);
+                        Drop_Column(3, numberarry, 0);
+                        //Print_Game(numberarry);
+                        break;
+                    case "R":
+                        Drop_Row(0, numberarry, 0);
+                        Drop_Row(1, numberarry, 0);
+                        Drop_Row(2, numberarry, 0);
+                        Drop_Row(3, numberarry, 0);
+                        //Print_Game(numberarry);
+                        break;
+                    case "L":
+                        Drop_Row(0, numberarry, 1);
+                        Drop_Row(1, numberarry, 1);
+                        Drop_Row(2, numberarry, 1);
+                        Drop_Row(3, numberarry, 1);
+                        break;
+                    case "U":
+                        Drop_Column(0, numberarry, 1);
+                        Drop_Column(1, numberarry, 1);
+                        Drop_Column(2, numberarry, 1);
+                        Drop_Column(3, numberarry, 1);
+                        break;
+                }
+            }
+
+            for (int x = 0; x < 4; x++)
+            {
+                for (int y = 0; y < 4; y++)
+                {
+                    try
+                    {
+                        num_ans[(int)Math.Log(numberarry[x, y], 2)]++;
+                    }
+                    catch (IndexOutOfRangeException)
+                    { }
+                }
+            }
+            int index=0;
+            for (int x = num_ans.Length-1; x > -1; x--)
+                if (num_ans[x] != 0)
+                {
+                    index = x;
+                    break;
+                }
+            for (int x = 1; x <= index; x++)
+                answer = answer + num_ans[x].ToString() + ' ';
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.ToString());
+            Console.ReadKey();
+
+        }
+    }
+}
