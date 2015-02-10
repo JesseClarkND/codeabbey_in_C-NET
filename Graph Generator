@@ -1,0 +1,135 @@
+namespace CodeAbbey1
+{
+    class Doubles
+    {
+        public int node;
+        public int length;
+
+        public Doubles(int x, int y)
+        {
+            node = x;
+            length = y;
+        }
+    }
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            int temp = 0;
+            string second = null;
+            string answer = null;
+            int[] numberarry = new int[2];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+            numberarry[0] = Convert.ToInt32(rows[0].Split(' ')[0]);
+            numberarry[1] = Convert.ToInt32(rows[0].Split(' ')[1]);
+            int[] transformed = new int[100];//numberarry[0]];
+            List<Doubles>[] The_Edges = new List<Doubles>[numberarry[0]+1];
+            //Xnext = (A * Xcur + C) % M
+            int A = 445;
+            int C = 700001;
+            int M = 2097152;
+            int X = numberarry[1];
+            int N = numberarry[0];
+            numberarry = new int[4];
+            temp = 0;
+            int index = 1;
+            for(int x=0;x<N+1;x++)
+                The_Edges[x] = new List<Doubles>();
+            for(int x=0;index<N+1;x++)
+            {
+                X=(A * X + C) % M;
+                numberarry[temp++] = X % N + 1;
+                temp = temp % 4;
+                if (temp == 0)
+                {
+                    bool in_there = false;
+                    Doubles temp_dub = new Doubles(numberarry[0], numberarry[1]);
+                    if (index != temp_dub.node)
+                    {
+                        foreach (Doubles item in The_Edges[index])
+                        {
+                            if (item.node == temp_dub.node)
+                            {
+                                in_there = true;
+                                break;
+                            }
+                        }
+                        if (in_there == false)
+                        {
+                            Doubles temper_dub = new Doubles(index, temp_dub.length);
+                            foreach (Doubles item in The_Edges[temp_dub.node])
+                            {
+                                if (item.node == temp_dub.node)
+                                {
+                                    in_there = true;
+                                    break;
+                                }
+                            }
+                            if (in_there == false)
+                            {
+                                The_Edges[index].Add(temp_dub);
+                                The_Edges[temp_dub.node].Add(temper_dub);
+                            }
+                        }
+                    }
+                    ////////////////////////
+                    ///The Second Part of thie gross looking code
+                    /////////////////////////
+                    in_there = false;
+                    temp_dub = new Doubles(numberarry[2], numberarry[3]);
+                    if (index != temp_dub.node)
+                    {
+                        foreach (Doubles item in The_Edges[index])
+                        {
+                            if (item.node == temp_dub.node)
+                            {
+                                in_there = true;
+                                break;
+                            }
+                        }
+                        if (in_there == false)
+                        {
+                            Doubles temper_dub = new Doubles(index, temp_dub.length);
+                            foreach (Doubles item in The_Edges[temp_dub.node])
+                            {
+                                if (item.node == temp_dub.node)
+                                {
+                                    in_there = true;
+                                    break;
+                                }
+                            }
+                            if (in_there == false)
+                            {
+                                The_Edges[index].Add(temp_dub);
+                                The_Edges[temp_dub.node].Add(temper_dub);
+                            }
+                        }
+                    }
+                    index++;
+                }
+                
+            }
+            for (int x = 1; x < N+1; x++)
+            {//Make it pretty
+                The_Edges[x] = The_Edges[x].OrderBy(o => o.node).ToList();
+            }
+            for (int x = 1; x < N + 1; x++)
+            {
+                temp=0;
+                for (int y = 0; y < The_Edges[x].Count; y++)
+                    temp += The_Edges[x][y].length;
+                answer = answer + temp.ToString() + ' ';
+            }
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.ToString());
+            Console.ReadKey();
+
+        }
+    }
+}
