@@ -1,0 +1,57 @@
+using System.Numerics;
+using System.Diagnostics;
+
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static BigInteger mod_pow(BigInteger boose, BigInteger pow, BigInteger moddy)
+        {
+            BigInteger result =1;
+            boose = boose % moddy;
+            while (pow > 0)
+            {
+                if (pow % 2 == 1)
+                    result = (result * boose) % moddy;
+                pow = pow >> 1;
+                boose = (boose * boose) % moddy;
+            }
+            return result;
+        }
+
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            BigInteger[] numberarry = new BigInteger[3];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+            int temp = 0;
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            foreach(string row in rows.Skip(1))
+            {//(A^B)%M
+                numberarry[0] = BigInteger.Parse(row.Split(' ')[0]);
+                numberarry[1] = BigInteger.Parse(row.Split(' ')[1]);
+                numberarry[2] = BigInteger.Parse(row.Split(' ')[2]);
+                
+                //Time for my, wikipedia's, function to run .0009170 sec <- Today is the day I lost to microsoft
+                //Time for the built in BigInteger.ModPow   .0004969 sec
+                //Time for for 7th grader programming ^%    .0004933 sec
+                answer = answer + mod_pow(numberarry[0], numberarry[1], numberarry[2]).ToString() + ' ';
+                //answer = answer + BigInteger.ModPow(numberarry[0], numberarry[1], numberarry[2]).ToString() + ' ';
+                //answer = answer + ((numberarry[0] ^ numberarry[1]) % numberarry[2]).ToString() + ' ';
+            }
+            stopwatch.Stop();
+            Console.WriteLine("Time elapsed: {0}", stopwatch.Elapsed);
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.ToString());
+            Console.ReadKey();
+        }
+    }
+}
