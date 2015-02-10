@@ -1,0 +1,209 @@
+namespace CodeAbbey1
+{
+    class Vector
+    {
+        private int x;
+        private int y;
+        public int X
+        {
+            get{ 
+                return x;
+            }
+            set { 
+                x = value;
+            }
+        }
+        public int Y
+        {
+            get
+            {
+                return y;
+            }
+            set
+            {
+                y = value;
+            }
+        }
+        public Vector(int ex, int why)
+        {
+            x = ex;
+            y = why;
+        }
+    }
+    class Program
+    {
+        static public int size = 50;
+
+        static void Print_Petri(char[,] the_world)
+        {
+            Console.Clear();
+            for(int x=0;x<size;x++)
+            {
+                for(int y=0;y<size;y++)
+                    Console.Write(' ' + the_world[x, y].ToString() + ' ');
+                Console.Write('\n');
+            }
+        }
+
+        static int Count_Organisms(char[,] the_world)
+        {
+            int woop = 0;
+            for (int x = 0; x < size; x++)
+            {
+                for (int y = 0; y < size; y++)
+                    if (the_world[x, y] == 'X')
+                        woop++;
+            }
+            return woop;
+        }
+
+        static void Mark_For_Birth(char[,] the_world, ref Vector[] Listypoo)
+        {
+            int cracker = 0;
+            for (int x = 0; x < size; x++)
+            {
+                for (int y = 0; y < size; y++)
+                {
+                    if (the_world[x, y] == '-')
+                    {
+                        int neighbors = 0;
+                        //Check below
+                        if (x + 1 < size)
+                        {
+                            if (y + 1 < size && the_world[x + 1, y + 1] == 'X')
+                                neighbors++;
+                            if (the_world[x + 1, y] == 'X')
+                                neighbors++;
+                            if (y - 1 > -1 && the_world[x + 1, y - 1] == 'X')
+                                neighbors++;
+                        }
+                        if (x - 1 > -1)
+                        {
+                            if (y + 1 < size && the_world[x - 1, y + 1] == 'X')
+                                neighbors++;
+                            if (the_world[x - 1, y] == 'X')
+                                neighbors++;
+                            if (y - 1 > -1 && the_world[x - 1, y - 1] == 'X')
+                                neighbors++;
+                        }
+                        if (y + 1 < size)
+                            if (the_world[x, y + 1] == 'X')
+                                neighbors++;
+                        if (y - 1 > -1)
+                            if (the_world[x, y - 1] == 'X')
+                                neighbors++;
+                        if (neighbors == 3)
+                        {
+                            Listypoo[cracker++] = new Vector(x, y);
+                        }
+                    }
+                }
+            }
+        }
+
+        static void Mark_For_Death(char[,] the_world, ref Vector[] Listypoo)
+        {
+            int cracker = 0;
+            for (int x = 0; x < size; x++)
+            {
+                for (int y = 0; y < size; y++)
+                {
+                    if (the_world[x, y] == 'X')
+                    {
+                        int neighbors = 0;
+                        //Check below
+                        if (x + 1 < size)
+                        {
+                            if (y+1<size && the_world[x + 1, y+1] == 'X')
+                                neighbors++;
+                            if (the_world[x + 1, y] == 'X')
+                                neighbors++;
+                            if (y-1>-1 && the_world[x + 1, y-1] == 'X')
+                                neighbors++;
+                        }
+                        if (x - 1 > -1)
+                        {
+                            if (y + 1 < size && the_world[x - 1, y + 1] == 'X')
+                                neighbors++;
+                            if (the_world[x - 1, y] == 'X')
+                                neighbors++;
+                            if (y - 1 > -1 && the_world[x - 1, y - 1] == 'X')
+                                neighbors++;
+                        }
+                        if(y+1<size)
+                            if (the_world[x, y+1] == 'X')
+                                neighbors++;
+                        if(y-1>-1)
+                            if (the_world[x, y-1] == 'X')
+                                neighbors++;
+                        if (neighbors < 2 || neighbors > 3)
+                        {
+                            Listypoo[cracker++] = new Vector(x, y);
+                        }       
+                    }
+                }
+            }
+        }
+
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            double[] numberarry = new double[3];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+
+            char[,] petri = new char[size, size];
+            for (int x = 0; x < size; x++)
+                for (int y = 0; y < size; y++)
+                    petri[x, y] = '-';
+            Vector[] Kill_List = new Vector[500];
+            Vector[] Schindlers_List = new Vector[500];
+            int temp = 0;
+            int start = size / 2;
+            temp=start;
+            foreach (string row in rows)
+            {
+                foreach (char ch in row)
+                    petri[start, temp++] = ch;
+                start++;
+                temp = size / 2;
+            }
+            int life=Count_Organisms(petri);
+            int generation = 1;
+            //while (life > 0)
+            while(generation<6)// comment out this line, and uncomment the line above and the two below for fun!
+            {
+               // Thread.Sleep(500);
+               // Print_Petri(petri);
+                Mark_For_Death(petri, ref Kill_List);
+                Mark_For_Birth(petri, ref Schindlers_List);
+                //Kill
+                int x=0;
+                while (Kill_List[x] != null)
+                    petri[Kill_List[x].X, Kill_List[x++].Y] = '-';
+                x = 0;
+                while (Schindlers_List[x] != null)
+                    petri[Schindlers_List[x].X, Schindlers_List[x++].Y] = 'X';
+                generation++;
+                
+                life = Count_Organisms(petri);
+                Kill_List = new Vector[500];
+                Schindlers_List = new Vector[500];
+                answer = answer + life.ToString() + ' ';
+
+            }
+
+            
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.ToString());
+            Console.ReadKey();
+
+        }
+    }
+}
