@@ -1,0 +1,90 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static void BubbleUp(int index, int value, int[] board)
+        {
+            if (index == 1)
+                board[1] = value;
+            else if (board[index / 2] < value)
+                board[index] = value;
+            else
+            {
+                board[index] = board[index / 2];
+                BubbleUp(index / 2, value, board);
+            }
+        }
+
+        static void BubbleDown(int index, int value, int[] board)
+        {
+            int j = 0;
+            if ((2 * index) > board.Length-1)
+                board[index] = value;
+            else if ((2 * index) == board.Length-1)
+            {
+                if (board[2 * index] < value)
+                {
+                    board[index] = board[2 * index];
+                    board[2 * index] = value;
+                }
+                else
+                    board[index] = value;
+            }
+            else
+            {
+                if (board[2 * index] < board[(2 * index) + 1])
+                    j = 2 * index;
+                else
+                    j = 2 * index + 1;
+                if (board[j] < value)
+                {
+                    board[index] = board[j];
+                    BubbleDown(j, value, board);
+                }
+                else
+                    board[index] = value;
+            }
+        }
+
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[] numberarry = new int[1];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+            int temp = 0;
+
+            //http://courses.cs.washington.edu/courses/cse373/06sp/handouts/lecture10.pdf
+            foreach (string row in rows.Skip(1))
+            {
+                string[] nummands = row.Split(' ');
+                foreach (string nummand in nummands)
+                {
+                    if (nummand.Equals("0"))
+                    {
+                        numberarry[1] = numberarry[numberarry.Length - 1];
+                        Array.Resize(ref numberarry, numberarry.Length -1);
+                        BubbleDown(1, numberarry[1], numberarry);
+                    }
+                    else
+                    {
+                        Array.Resize(ref numberarry, numberarry.Length + 1);
+                        numberarry[numberarry.Length-1] = Convert.ToInt32(nummand);
+                        BubbleUp(numberarry.Length-1, numberarry[numberarry.Length-1], numberarry);
+                    }
+                }
+            }
+            for (int x = 1; x < numberarry.Length; x++)
+                answer = answer + numberarry[x].ToString() + ' ';
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.ToString());
+            Console.ReadKey();
+        }
+    }
+}
