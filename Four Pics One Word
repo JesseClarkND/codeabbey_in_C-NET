@@ -1,0 +1,181 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
+using System.Threading;
+//using System.Numerics;
+//using System.Diagnostics;
+
+namespace CodeAbbey1
+{
+    class Letter
+    {
+        public char letter;
+        public bool end_of_word;
+        public Letter[] Pointers;
+        public string word;
+        //public List<Letter> Pointers;
+
+        public Letter()
+        {
+            letter=' ';
+            end_of_word = false;
+            Pointers = new Letter[26];
+           // Pointers = new List<Letter>();
+        }
+
+        public Letter(char let)
+        {
+            letter = let;
+            end_of_word = false;
+            Pointers = new Letter[26];
+           // Pointers = new List<Letter>();
+        }
+    }
+    class Trie
+    {
+        public Letter root; //root letter will always be ' '
+
+        public Trie()
+        {
+            root = new Letter();
+        }
+
+        public void Add_Word(string word)
+        {
+
+            Letter node = root;
+                for (int y = 0; y < word.Length; y++)
+                {
+                    char letter = word[y];
+                    Letter next;
+                    if (node.Pointers[(int)letter - 97] == null)
+                    {
+                        next = new Letter();
+                        next.letter = letter;
+                        next.word = word;
+                        next.end_of_word = y == word.Length - 1 ? true : false;
+                        node.Pointers[(int)letter - 97] = next;
+                        node = next;
+                    }
+                    else
+                    {
+                        node = node.Pointers[(int)letter - 97];
+                    }
+                    
+                }
+        }
+
+        public bool Check_For_Match(char[] check,int depth)
+        {
+            if(depth>check.Length)
+                return false;
+
+            Letter node = root;
+            for (int x = 0; x < depth; x++)
+            {
+                if (node.Pointers[(int)check[x] - 97] == null)
+                    return false;
+                else
+                    node = node.Pointers[(int)check[x] - 97];
+
+            }
+            return node.end_of_word;
+
+        }
+
+        public void Traverse_Tree(char[] check, int depth, int goal_depth, Letter trav, ref int temp)
+        {
+            if(depth==goal_depth)
+            {
+                if (trav.end_of_word == true)
+                {
+                    bool possible = true;
+                    //char[] rekt = trav.word.ToArray();
+                    for (int x = 0; x < trav.word.Length; x++)
+                    {
+                        if (Array.IndexOf(check, trav.word[x]) == -1)
+                        {
+                            possible = false;
+                            break;
+                        }
+                    }
+                    if (possible)
+                    {
+                        int[] trav_count = new int[26];
+                        int[] check_count = new int[26];
+                        for (int x = 0; x < trav.word.Length; x++)
+                            trav_count[(int)trav.word[x] - 97]++;
+                        for (int x = 0; x < check.Length; x++)
+                            check_count[(int)check[x] - 97]++;
+                        for(int x =0; x<26; x++)
+                            if (check_count[x] < trav_count[x])
+                            {
+                                possible = false;
+                                break;
+                            }
+
+                        if(possible)
+                            temp++;
+                    }
+                }
+            }
+            else
+            {
+                for (int x = 0; x < 26; x++)
+                {
+                    //Letter node = trav;
+                    if (trav.Pointers[x] != null)
+                        Traverse_Tree(check, depth + 1, goal_depth, trav.Pointers[x], ref temp);
+                }
+            }
+        }
+    }
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[,] numberarry;// = new int[10000];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+            Trie Trie_Hard = new Trie();
+
+            string third = null;
+            filePath = "words.txt";
+            streamReader = new StreamReader(filePath);
+            //Build the tree from the dictionary file
+            while (streamReader.Peek() >= 0)
+            {
+                third = streamReader.ReadLine();
+                Trie_Hard.Add_Word(third);
+            }
+
+            int temp = 0;
+            foreach (string row in rows.Skip(1))
+            {
+                string[] infostack = row.Split(' ');
+                int wordlength = Convert.ToInt32(infostack[0]);
+                char[] source = new char[infostack.Length-1];
+                for (int x = 1; x < infostack.Length; x++)
+                    source[x - 1] = Convert.ToChar(infostack[x]);
+                Trie_Hard.Traverse_Tree(source, 0, wordlength, Trie_Hard.root, ref temp);
+                answer = answer + temp.ToString() + ' ';
+                temp=0;
+            }
+             
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
