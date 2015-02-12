@@ -1,0 +1,49 @@
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[,] numberarry;// = new int[10000];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+            string[] info = rows[0].Split(' ');
+            double A = double.Parse(info[1]);
+            double B = double.Parse(info[2]);
+            double C = double.Parse(info[3]);
+            double dt = 0.000001d;
+            int temp = 0;
+            foreach (string row in rows.Skip(1))
+            {
+                double x = double.Parse(row.Split(' ')[0]);
+                double y = double.Parse(row.Split(' ')[1]);
+                //f = f(x, y) = (x - A)^2 + (y - B)^2 + C * exp(- (x + A)^2 - (y + B)^2)
+                double f = (x - A) * (x - A) + (y - B) * (y - B) + C * Math.Exp(-1*(x+A)*(x+A)-(y+B)*(y+B));
+                x = x + dt;
+                double f1 = (x - A) * (x - A) + (y - B) * (y - B) + C * Math.Exp(-1 * (x + A) * (x + A) - (y + B) * (y + B));
+                x = x - dt;
+                y = y + dt;
+                double f2 = (x - A) * (x - A) + (y - B) * (y - B) + C * Math.Exp(-1 * (x + A) * (x + A) - (y + B) * (y + B));
+                y = y - dt;
+                double gx = (f1 - f) / dt;
+                double gy = (f2 - f) / dt;
+                double almost = Math.Atan2(gy, gx)*180.0d/Math.PI;
+                almost = (almost + 180) % 360;
+                temp = Convert.ToInt32(almost);
+                answer = answer + temp.ToString() + ' ';
+            }
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
