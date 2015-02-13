@@ -1,0 +1,84 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
+using System.Threading;
+//using System.Numerics;
+//using System.Diagnostics;
+//using System.Net;
+
+namespace CodeAbbey1
+{
+    class Node
+    {
+        public int value;
+        public int total;
+        public Node Move_One;
+        public Node Move_Two;
+    }
+
+    class SweetTree
+    {
+        public Node root;
+
+        public SweetTree()
+        {
+
+        }
+
+        public void Build_Tree(int[] arry, int index, int total,ref Node trav, ref int max)
+        {
+            if (trav == null)
+            {
+                total = total + arry[index];
+                Node NewNode = new Node();
+                NewNode.value = arry[index];
+                NewNode.total = total;
+                if (NewNode.total > max)
+                    max = NewNode.total;
+                trav = NewNode;
+            }
+            if (index + 2 < arry.Length)
+                Build_Tree(arry, index + 2, total, ref trav.Move_One, ref max);
+            if (index + 3 < arry.Length)
+                Build_Tree(arry, index + 3, total, ref trav.Move_Two, ref max);  
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[] numberarry;// = new int[10000];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+
+            int temp = 0;
+            foreach (string row in rows.Skip(1))
+            {
+                string[] wingo = row.Split(' ');
+                numberarry = new int[wingo.Length];
+                foreach (string wing in wingo)
+                    numberarry[temp++] = Convert.ToInt32(wing);
+                temp = 0;
+                SweetTree Its_Candy = new SweetTree();
+                Its_Candy.Build_Tree(numberarry, 0, 0, ref Its_Candy.root, ref temp);
+                answer = answer + temp.ToString() + ' ';
+                temp = 0;
+            }
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
