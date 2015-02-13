@@ -1,0 +1,102 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
+using System.Threading;
+//using System.Numerics;
+//using System.Diagnostics;
+//using System.Net;
+
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[,] numberarry;// = new int[10000];
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+            string[] info = rows[0].Split(' ');
+            int number_of_points = int.Parse(info[0]);
+            numberarry = new int[number_of_points, 2];
+            int alpha_output = int.Parse(info[1]);
+
+            //Note: the values for alpha should be calculated by dividing the range 0.0 ... 1.0 into N - 1 equal steps.
+            alpha_output--;
+
+
+            int temp = 0;
+            foreach (string row in rows.Skip(1))
+            {
+                numberarry[temp, 0] = int.Parse(row.Split(' ')[0]);
+                numberarry[temp++, 1] = int.Parse(row.Split(' ')[1]);
+            }
+            temp = 0;
+            int multiplyer = number_of_points - 1;
+
+            int[] x_array = new int[number_of_points];
+            int[] y_array = new int[number_of_points];
+
+            /////////////////////////////////
+            /////////////////////////////////
+            //Linear Bezier Curve Algorithm
+
+            for (int p = 1; p < x_array.Length; p++)
+            {
+                if (p != x_array.Length - 1)
+                {
+                    x_array[p] = multiplyer * (numberarry[p, 0] - numberarry[p - 1, 0]);
+                    y_array[p] = multiplyer * (numberarry[p, 1] - numberarry[p - 1, 1]);
+                }
+                else
+                {
+                    x_array[p] = multiplyer * (numberarry[p, 0] - numberarry[0, 0]);
+                    y_array[p] = multiplyer * (numberarry[p, 1] - numberarry[0, 1]);
+                }
+            }
+            x_array[x_array.Length - 1] = x_array[x_array.Length - 1] / multiplyer;
+            y_array[y_array.Length - 1] = y_array[y_array.Length - 1] / multiplyer;
+            for (int p = 1; p < x_array.Length; p++)
+            {
+                for (int a = p - 1; a > -1; a--)
+                {
+                    x_array[p] = x_array[p] - x_array[a];
+                    y_array[p] = y_array[p] - y_array[a];
+                }
+            }
+
+            for (double x = 0; temp <= alpha_output; x += (1d / (double)alpha_output))
+            {
+                double hex = 0;
+                double why = 0;
+                for (int swing = x_array.Length - 1; swing > -1; swing--)
+                {
+                    //Played with a lot of different rounding here with no luck
+                    hex = (hex + (x_array[swing] * Math.Pow(x, swing)));
+                    why = (why + (y_array[swing] * Math.Pow(x, swing)));
+                }
+                hex = hex + numberarry[0, 0];
+                why = why + numberarry[0, 1];
+                int ef = Convert.ToInt32(hex);
+                int fe = Convert.ToInt32(why);
+                answer = answer + ef.ToString() + ' ' + fe.ToString() + ' ';
+                temp++;
+                // x = woah;
+            }
+
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
