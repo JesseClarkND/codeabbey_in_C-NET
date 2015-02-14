@@ -1,0 +1,63 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
+using System.Threading;
+using System.Numerics;
+//using System.Diagnostics;
+//using System.Net;
+
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[] numberarry;
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+
+
+            foreach (string row in rows.Skip(1))
+            {
+                string[] numbers = row.Split(' ');
+                foreach (string number in numbers)
+                {
+                    int x = 2;
+                    int int_num = Convert.ToInt32(number);
+
+                    BigInteger fib1 = 0;
+                    BigInteger fib2 = 1;
+                    BigInteger temp = 0;
+                    
+                    while (true)
+                    {
+                        temp = fib2 + fib1;
+                        if (temp % int_num == 0)
+                        {
+                            answer = answer + x.ToString() + ' ';
+                            break;
+                        }
+                        fib1 = fib2 % int_num;
+                        fib2 = temp % int_num;
+                        x++;
+                    }
+                    x = 0;
+                }
+            }
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
