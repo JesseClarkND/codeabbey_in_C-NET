@@ -1,0 +1,110 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
+using System.Threading;
+using System.Numerics;
+//using System.Diagnostics;
+//using System.Net;
+
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[] numberarry;
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+            //0 -a
+            //25 -z
+            //26 !
+            //27 ' '
+            string[] alphabetprus = new string[28] {"011","0000010","000101","00101","101","000100","0000100","0011","01001",
+                                                   "000000001","0000000001","001001", "000011","10000","10001", "0000101",
+                                                    "000000000001","01000","0101", "1001", "00011","00000001", "0000011",
+                                                    "00000000001", "0000001", "000000000000", "001000","11"};
+
+            string[] BadBin2Char = new string[28] {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", 
+                                                    "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "!", " "};
+            //0123456789ABCDEFGHIJKLMNOPQRSTUV
+            string[] compress2mess = new string[32] { "00000", "00001", "00010", "00011", "00100", "00101", "00110", "00111",
+                                                      "01000", "01001", "01010", "01011", "01100", "01101", "01110", "01111",
+                                                      "10000", "10001", "10010", "10011", "10100", "10101", "10110", "10111",
+                                                      "11000", "11001", "11010", "11011", "11100", "11101", "11110", "11111" };
+            StringBuilder BitStream = new StringBuilder();
+            int temp = 0;
+            foreach (string row in rows)
+            {
+                foreach (char compress in row)
+                {
+                    switch (compress)
+                    {
+                        case '0': BitStream.Append(compress2mess[0]); break;
+                        case '1': BitStream.Append(compress2mess[1]); break;
+                        case '2': BitStream.Append(compress2mess[2]); break;
+                        case '3': BitStream.Append(compress2mess[3]); break;
+                        case '4': BitStream.Append(compress2mess[4]); break;
+                        case '5': BitStream.Append(compress2mess[5]); break;
+                        case '6': BitStream.Append(compress2mess[6]); break;
+                        case '7': BitStream.Append(compress2mess[7]); break;
+                        case '8': BitStream.Append(compress2mess[8]); break;
+                        case '9': BitStream.Append(compress2mess[9]); break;
+                        case 'A': BitStream.Append(compress2mess[10]); break;
+                        case 'B': BitStream.Append(compress2mess[11]); break;
+                        case 'C': BitStream.Append(compress2mess[12]); break;
+                        case 'D': BitStream.Append(compress2mess[13]); break;
+                        case 'E': BitStream.Append(compress2mess[14]); break;
+                        case 'F': BitStream.Append(compress2mess[15]); break;
+                        case 'G': BitStream.Append(compress2mess[16]); break;
+                        case 'H': BitStream.Append(compress2mess[17]); break;
+                        case 'I': BitStream.Append(compress2mess[18]); break;
+                        case 'J': BitStream.Append(compress2mess[19]); break;
+                        case 'K': BitStream.Append(compress2mess[20]); break;
+                        case 'L': BitStream.Append(compress2mess[21]); break;
+                        case 'M': BitStream.Append(compress2mess[22]); break;
+                        case 'N': BitStream.Append(compress2mess[23]); break;
+                        case 'O': BitStream.Append(compress2mess[24]); break;
+                        case 'P': BitStream.Append(compress2mess[25]); break;
+                        case 'Q': BitStream.Append(compress2mess[26]); break;
+                        case 'R': BitStream.Append(compress2mess[27]); break;
+                        case 'S': BitStream.Append(compress2mess[28]); break;
+                        case 'T': BitStream.Append(compress2mess[29]); break;
+                        case 'U': BitStream.Append(compress2mess[30]); break;
+                        case 'V': BitStream.Append(compress2mess[31]); break;
+                    }
+
+                }
+                string Bits = BitStream.ToString();
+                BitStream.Clear();
+            
+                string tempper="";
+                foreach (char bit in Bits)
+                {
+                    tempper += bit;
+                    temp=Array.IndexOf(alphabetprus, tempper);
+                    if (temp != -1)
+                    {
+                        tempper = "";
+                        answer = answer + BadBin2Char[temp];
+                    }
+
+                }
+
+            }
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
