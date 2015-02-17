@@ -1,0 +1,106 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
+using System.Threading;
+using System.Numerics;
+//using System.Diagnostics;
+//using System.Net;
+
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[] numberarry;
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] rows = second.Split('|');
+
+            int temp = 0;
+            foreach (string row in rows.Skip(1))
+            {
+                int start_val = 0;
+                int start_vall = 0;
+                int min_switch = 0;
+                int max_switch = 0;
+                int min_val = 0;
+                int max_val = 999;
+                char[] the_mighty_array = row.ToArray();
+
+                int x = start_vall + 1;
+                while (true)
+                {
+                    if (start_vall == 0 && the_mighty_array[x] == '0')
+                        ;
+                    else
+                    {
+                        if (the_mighty_array[start_vall] >= the_mighty_array[x])
+                            if (the_mighty_array[start_vall] - the_mighty_array[x] >= min_val)
+                            {
+                                min_switch = x;
+                                min_val = the_mighty_array[start_vall] - the_mighty_array[x];
+                            }
+                    }
+                    x++;
+                    if (x == the_mighty_array.Length)
+                    {
+                        if (min_val != 0)
+                            break;
+                        x = start_vall + 1;
+                        start_vall++;
+                    }
+                    if (start_vall == the_mighty_array.Length)
+                        break;
+                }
+
+                int y = the_mighty_array.Length - 1;
+                while (true)
+                {
+                    if (the_mighty_array[start_val] < the_mighty_array[y])
+                        if (the_mighty_array[start_val] - the_mighty_array[y] < max_val)
+                        {
+                            max_switch = y;
+                            max_val = the_mighty_array[start_val] - the_mighty_array[y];
+                        }
+                    y--;
+                    if (y == start_val)
+                    {
+                        if (max_val != 999)
+                            break;
+                        y = the_mighty_array.Length - 1;
+                        start_val++;
+                    }
+                    if (start_val == the_mighty_array.Length)
+                        break;
+                }
+
+                char temptrest = the_mighty_array[start_vall];
+                the_mighty_array[start_vall] = the_mighty_array[min_switch];
+                the_mighty_array[min_switch] = temptrest;
+                string yoko = new String(the_mighty_array);
+                answer = answer + yoko + ' ';
+                the_mighty_array = row.ToArray();
+
+                temptrest = the_mighty_array[start_val];
+                the_mighty_array[start_val] = the_mighty_array[max_switch];
+                the_mighty_array[max_switch] = temptrest;
+                yoko = new String(the_mighty_array);
+                answer = answer + yoko + ' ';
+
+            }
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
