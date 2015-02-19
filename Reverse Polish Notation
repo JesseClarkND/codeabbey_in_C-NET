@@ -1,0 +1,132 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
+using System.Threading;
+using System.Numerics;
+//using System.Diagnostics;
+//using System.Net;
+
+namespace CodeAbbey1
+{
+    class Program
+    {
+        static public long Get_Rando(long input)
+        {
+            long temp = 0;
+            char[] x_arr = input.ToString().ToArray();
+            while (x_arr.Length < 6)
+            {
+                temp = 6 - x_arr.Length;
+                int index = x_arr.Length - 1;
+                Array.Resize(ref x_arr, x_arr.Length + (int)temp);
+                for (int e = 1; e < x_arr.Length; e++)
+                {
+                    if (index < 0)
+                        break;
+                    x_arr[x_arr.Length - e] = x_arr[index--];
+                }
+                for (int w = 0; w < temp; w++)
+                    x_arr[w] = '0';
+
+            }
+            char[] holster = new char[3];
+            for (int y = 0; y < 3; y++)
+                holster[y] = x_arr[y];
+            for (int y = 0; y < 3; y++)
+            {
+                x_arr[y] = x_arr[y + 3];
+                x_arr[y + 3] = holster[y];
+            }
+            string yokko = new String(x_arr);
+            long why = long.Parse(yokko);
+            temp = input * why;
+            // temp = temp * temp;//- raised to power of 2
+            temp = temp / 1000; //truncate last 3 numbers
+            temp = temp % 1000000; //clip the first 3 numbers
+            return temp;
+        }
+
+        static public bool IsSorted(int[] arr)
+        {
+            for(int x=0;x<arr.Length-1;x++)
+            {
+                if (arr[x] < arr[x + 1])
+                    continue;
+                else
+                    return false;
+            }
+
+            return true;
+        }
+
+        static void Main(string[] args)
+        {
+            string second = null;
+            string answer = null;
+            int[] numberarry;
+            string filePath = "inputfile.txt";
+            StreamReader streamReader = new StreamReader(filePath);
+            second = streamReader.ReadToEnd();
+            streamReader.Close();
+            second = second.Replace("\r\n", "|");
+            string[] commands = second.Split(' ');
+
+            long temp = 0;
+            Stack<int> The_Mighty_Stack = new Stack<int>();
+            foreach (string command in commands)
+            {
+                try{
+                    int cream = int.Parse(command);
+                    The_Mighty_Stack.Push(cream);
+                }
+                catch(Exception)
+                {
+                    int left = 0;
+                    int right = 0;
+                    switch (command)
+                    {
+                        case "add":
+                            right = The_Mighty_Stack.Pop();
+                            left = The_Mighty_Stack.Pop();
+                            The_Mighty_Stack.Push(left + right);
+                            break;
+                        case "sub": 
+                            right = The_Mighty_Stack.Pop();
+                            left = The_Mighty_Stack.Pop();
+                            The_Mighty_Stack.Push(left - right);
+                            break;
+                        case "mul":
+                            right = The_Mighty_Stack.Pop();
+                            left = The_Mighty_Stack.Pop();
+                            The_Mighty_Stack.Push(left * right);
+                            break;
+                            break;
+                        case "div":
+                            right = The_Mighty_Stack.Pop();
+                            left = The_Mighty_Stack.Pop();
+                            The_Mighty_Stack.Push(left / right);
+                            break;
+                        case "mod":
+                            right = The_Mighty_Stack.Pop();
+                            left = The_Mighty_Stack.Pop();
+                            The_Mighty_Stack.Push(left % right);
+                            break;
+                        case "sqrt":
+                            left = The_Mighty_Stack.Pop();
+                            The_Mighty_Stack.Push((int)Math.Sqrt((double)left));
+                            break;
+                    }
+                }
+            }
+            int brown = The_Mighty_Stack.Pop();
+            answer = brown.ToString();
+            Console.WriteLine("The answer is:");
+            Console.Write(answer.Trim());
+            Console.ReadKey();
+
+        }
+    }
+}
